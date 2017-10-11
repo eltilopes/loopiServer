@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.MobileDao">
+	
+	<select id="versionActive"
+			resultType="br.com.aio.model.entity.vo.MobileVersionVo" >
+					   
+			select v.versionCode as versionCode ,
+				v.versionName as versionName, 
+				v.mandatory as mandatory 
+		  from (select  mv.ds_version_code as versionCode, 
+		  				mv.ds_version_name as versionName,
+		  				mv.fl_mandatory as mandatory
+		          from tb_mobile_version mv
+		         where mv.fl_ativo = 1
+		         and mv.ds_version_code > #{versionCode}
+		         and mv.fl_mandatory = 1
+		         order by mv.dt_create desc) v
+		 limit 1
+		         
+		  
+
+	</select>
+	
+</mapper>

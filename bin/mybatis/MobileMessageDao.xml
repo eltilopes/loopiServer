@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.MobileMessageDao" >
+	
+	<select id="listUserMessage" 
+			resultType="br.com.aio.model.entity.MobileMessage"
+			parameterType="Map">
+		select 
+		     mm.ci_mobile_message id,  
+		     mm.ds_titulo title,
+		     mm.ds_corpo body,
+		     mm.dt_criacao creationDate,
+		     umm.fl_status status
+		from tb_usuario_mobile_message umm
+		left join tb_mobile_message mm on mm.ci_mobile_message = umm.cd_mobile_message
+		where umm.cd_usuario_mobile = #{id}
+			and umm.fl_status != #{status}
+		order by mm.dt_criacao desc
+	</select> 
+	
+</mapper>

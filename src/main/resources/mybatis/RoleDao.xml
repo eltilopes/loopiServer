@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.RoleDao">
+
+<select id="getRolesByCPF"
+    		parameterType="String"
+			resultType="br.com.aio.security.entity.Role">
+			select r.ci_role id, r.nm_role "label" from tb_role r
+				where 1=1 
+					<![CDATA[
+		 				and r.ci_role <> 1
+		          	]]>
+		       
+	</select>
+	
+
+    <select id="listaRoles"
+    		parameterType="Long"
+			resultType="br.com.aio.security.entity.Role">
+			select r.ci_role as id, r.nm_role as "label" from tb_role r
+			inner join tb_usuario_role ur on ur.cd_role = r.ci_role
+			inner join tb_usuario_mobile um on um.ci_usuario_mobile = ur.cd_usuario_mobile
+			where um.ci_usuario_mobile = #{idUsuario}
+	</select>
+	
+	<select id="listaRolesPorLogin"
+    		parameterType="String"
+			resultType="br.com.aio.security.entity.Role">
+			select r.ci_role as id, r.nm_role as "label" from tb_role r
+			inner join tb_usuario_role ur on ur.cd_role = r.ci_role
+			inner join tb_usuario_mobile um on um.ci_usuario_mobile = ur.cd_usuario_mobile
+			where um.ds_email = #{login}
+	</select>
+	
+	<select id="getAllRoles"
+			resultType="br.com.aio.security.entity.Role">
+			select r.ci_role as id, r.nm_role as "label" from tb_role r
+	</select>
+	
+	<select id="getRole"
+    		parameterType="Long"
+			resultType="br.com.aio.security.entity.Role">
+			select r.ci_role as id, r.nm_role as "label" from tb_role r 
+			where r.ci_role = #{id}
+	</select>
+</mapper>

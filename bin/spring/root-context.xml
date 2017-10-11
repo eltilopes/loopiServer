@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Activations -->
+    <context:annotation-config />
+    <context:component-scan base-package="br.com.aio" />
+    <tx:annotation-driven />
+    
+    <bean id="messages" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+  <property name="location" value="classpath:messages.properties"/>
+</bean>
+
+<context:property-placeholder properties-ref="messages"/>
+
+	<!-- Data Management -->
+    <bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="username" value="postgres" />
+        <property name="password" value="postgres" />
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://localhost:5432/all_in_one" />       
+        
+    </bean>
+
+    <bean id="sessionFactory"
+        class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">none</prop>
+            </props>
+        </property>
+        <property name="packagesToScan" 
+        		value="br.com.aio.model.entity,
+        			   br.com.aio.security.entity" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	   <property name="dataSource" ref="dataSource" />
+	   <property name="mapperLocations" value="classpath*:mybatis/*.xml" />
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	  <constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+	
+	<!-- Bean Creation -->
+	<bean class="org.springframework.web.client.RestTemplate" id="restTemplate" />
+    
+    <bean class="com.google.android.gcm.server.Sender" id="sender">
+    	<constructor-arg index="0" value="AIzaSyCWUa2eRgu37xPI9QFiQe-vFN950BnNwEM"/>
+    </bean>
+    
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+    
+    <bean factory-bean="objectMapper" factory-method="getSerializationConfig" id="jacksonSerializationConfig" />
+    
+    <!-- 
+    <bean id="glpiAuthentication" class="br.com.aio.security.service.GlpiAuthentication" />
+       -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host"><value>smtp.gmail.com</value></property>
+        <property name="port"><value>587</value></property>
+        <property name="protocol"><value>smtp</value></property>
+        <property name="username"><value>eltilopes@gmail.com</value></property>
+        <property name="password"><value>mirella2706</value></property>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.quitwait">false</prop>
+            </props>
+        </property>
+<!--     	<property name="host" value="smtp.sme.fortaleza.ce.gov.br" /> -->
+<!-- 		<property name="port" value="25" /> -->
+<!-- 		<property name="username" value="sistemas@sme.fortaleza.ce.gov.br" /> -->
+<!-- 		<property name="password" value="sistemas321" /> -->
+<!-- 		<property name="javaMailProperties"> -->
+<!-- 		   <props> -->
+<!--        	      <prop key="mail.smtp.auth">true</prop> -->
+<!--        	      <prop key="mail.mime.charset">UTF-8</prop> -->
+<!--        	      <prop key="mail.transport.protocol">smtp</prop> -->
+<!--        	   </props> -->
+<!-- 		</property> -->
+    </bean>
+
+	<!-- Cache -->
+	<!-- 
+	<bean id="cacheManager"
+          class="br.com.aio.model.consumer.session.GlpiSession"
+          init-method="init"
+          c:cache="#{T(com.google.common.cache.CacheBuilder)
+                         .newBuilder()
+                         .maximumSize(100)
+                         .expireAfterWrite(1,T(java.util.concurrent.TimeUnit).DAYS)
+                         .build()}"
+          c:glpiAuthentication-ref="glpiAuthentication" />
+	-->
+	
+	<!-- Aspect -->
+	<!-- bean responsible for poitcuts -->
+	<bean id="oAuthErrorResponse" class="br.com.aio.security.aop.OAuthErrorResponse" />
+	
+	<!-- Aspect configuration -->
+	
+	<aop:config>
+    	<aop:aspect ref="oAuthErrorResponse">
+    		<aop:pointcut id="pointCutOAuth" expression="execution(* org.springframework.security.oauth2.provider.endpoint.TokenEndpoint.handleException(..))" />
+    		<aop:pointcut id="pointCutMethodNotSupportedException" expression="execution(* org.springframework.security.oauth2.provider.endpoint.TokenEndpoint.handleHttpRequestMethodNotSupportedException(..))" />
+    		
+    		<aop:around method="oAuthErrorIntercept" pointcut-ref="pointCutOAuth"/>
+    		<aop:around method="oAuthErrorIntercept" pointcut-ref="pointCutMethodNotSupportedException"/>
+   
+    	</aop:aspect>
+    </aop:config>
+	
+	
+</beans>

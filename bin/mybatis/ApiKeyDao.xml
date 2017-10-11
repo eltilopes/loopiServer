@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.ApiKeyDao">
+
+    <select id="listaApiKey"
+    		parameterType="String"
+			resultType="br.com.aio.model.entity.ApiKey">
+			select
+			  ak.ci_api_key id,
+			  ak.ds_hash hash
+			from tb_api_key ak 
+      		inner join tb_usuario_mobile_api_key uapk on uapk.cd_api_key = ak.ci_api_key
+			where uapk.cd_usuario_mobile in (
+				${value}
+			) 
+			group by ak.ci_api_key, ak.ds_hash 
+	</select>
+	
+	<select id="getApiKeyByHash"
+    		parameterType="String"
+			resultType="br.com.aio.model.entity.ApiKey">
+			select 
+			  ak.ci_api_key id,
+			  ak.ds_hash hash
+			from tb_api_key ak 
+			where ak.ds_hash = #{value}
+	</select>
+	<!-- 
+	<insert id="saveApiKey" 
+			parameterType="br.com.aio.model.entity.ApiKey">
+			insert into util.tb_api_key (ci_api_key, ds_hash, cd_usuario_mobile) 
+	        values (util.seq_tb_api_key.nextval, #{hash}, #{usuario.id})
+	</insert>
+	-->
+</mapper>

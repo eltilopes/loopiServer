@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.SecurityQuestionDao">
+   
+	<select id="getRandomSecurityQuestions" resultType="br.com.aio.model.entity.SecurityQuestion">
+		<![CDATA[
+		select ci_questao_seguranca id, ds_questao description, ds_query_resposta query
+		from(select * from tb_questao_seguranca order by dbms_random.random)
+		where  rownum < 4
+		]]>
+	</select>
+	<select id="getQueryReplySecurity" resultType="String" parameterType="Long">
+		select qs.ds_query_resposta from tb_questao_seguranca qs
+		where qs.ci_questao_seguranca = #{value}
+	</select>
+	
+		
+</mapper>

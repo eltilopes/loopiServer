@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.MedicoDao">
+<select id="getMedicos"
+			resultType="br.com.aio.model.entity.Medico">
+			
+			select distinct
+				  m.ci_medico id ,
+				  m.ds_email email,
+				  m.ds_crm crm,
+				  m.nr_cpf cpf,
+				  m.nm_medico nome,
+				  m.nm_url_foto urlFoto
+			from tb_medico m
+									
+	</select>
+</mapper>
