@@ -9,6 +9,8 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import com.sun.security.ntlm.Client;
+
 import br.com.aio.exception.BusinessException;
 import br.com.aio.exception.CpfAlreadyExistsException;
 import br.com.aio.exception.UserAlreadyExistsException;
@@ -36,21 +38,21 @@ public class UsuarioService {
 	@Inject
 	private MailManager mailManager;
 
+    private static final String CLIENT_AIO = "aio";
+    
 	public UsuarioAuth getUser(String login, String senha, String client) {
 		
 		//TODO: ajustar regra de pegar o usuario que ira logar na app
-//		if(Client.MOBILE.getName().equals(client)){
-//			return usuarioDao.getUser(login, DigestUtils.md5Hex(senha));	
-//		}else if(Client.APISME.getName().equals(client)){
-//			return usuarioDao.getUserApiSme(login, DigestUtils.md5Hex(senha));
-//		}
-//		return usuarioDao.getUser(login);
-		UsuarioAuth u = new UsuarioAuth();
-		u.setId(1l);
-		u.setLogin("eltilopes@gmail.com");
-		u.setNome("elton");
-		u.setSenha("elton");
-		return u;
+		if(CLIENT_AIO.equals(client)){
+			return usuarioDao.getUser(login, senha);	
+		}else {
+			UsuarioAuth u = new UsuarioAuth();
+			u.setId(1l);
+			u.setLogin("eltilopes@gmail.com");
+			u.setNome("elton");
+			u.setSenha("elton");
+			return u;			
+		}
 	}
 
 	public Usuario getUserAndGlpiUser(String login) throws Exception {

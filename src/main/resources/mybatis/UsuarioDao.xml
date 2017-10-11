@@ -180,7 +180,7 @@
 				u.nr_cpf cpf,
 				u.ds_email login
 			from tb_usuario_mobile u
-			where u.ds_email = #{login}
+			where u.nr_cpf = #{login}
 			and u.ds_senha = #{senha}
 			and u.fl_ativo = 1
 	</select>
