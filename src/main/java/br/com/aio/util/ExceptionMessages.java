@@ -23,5 +23,7 @@ public class ExceptionMessages {
 	public static final String WRONG_MAIL = "Não foi possível enviar um email de confirmação para o endereço de email informado";
 
 	public static final String TESTE = "teste";
+
+	public static final String CONVITE_EXISTS = "Esse CPF já solicitou convite";
 	
 }

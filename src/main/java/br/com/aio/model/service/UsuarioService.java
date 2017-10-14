@@ -9,8 +9,6 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
-import com.sun.security.ntlm.Client;
-
 import br.com.aio.exception.BusinessException;
 import br.com.aio.exception.CpfAlreadyExistsException;
 import br.com.aio.exception.UserAlreadyExistsException;

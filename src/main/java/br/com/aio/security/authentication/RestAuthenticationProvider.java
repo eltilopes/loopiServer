@@ -45,7 +45,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
 			authorities.add(role.simpleAuthority());
 		});
 			usuario.setRoles(roles);
-		
+		System.out.println("Login: " + auth.getPrincipal());
 		return new RestToken(usuario, null, authorities);
 	}
 	

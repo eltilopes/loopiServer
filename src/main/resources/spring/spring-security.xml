@@ -11,7 +11,8 @@
                 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
 	
 	<security:http pattern="/medico/listar" security="none"  />
- 
+	<security:http pattern="/convite/solicitar" security="none"  />
+
 	<security:http pattern="/oauth/token" create-session="stateless" 
         authentication-manager-ref="authenticationManager" >
         <security:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
@@ -40,6 +41,7 @@
         <security:intercept-url pattern="/usuario/editar" access="hasRole('usuario_update')"/>
         <security:intercept-url pattern="/usuario/roles/**" access="hasRole('usuario_read')"/>
         <security:intercept-url pattern="/usuario/apikey" access="hasRole('usuario_apikey')"/>
+        
 
         <!-- 
         	<security:intercept-url pattern="/mensagem/novo" access="hasRole('mensagem_create')" />
