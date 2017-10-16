@@ -234,4 +234,14 @@ public class UsuarioService {
 	public List<Usuario> getUsersByGroupDefault(Map<String, Integer> parameters) {
 		return usuarioDao.getUsersByGroupDefault(parameters);
 	}
+
+	public Usuario getUsuarioCashBack() {
+		//TODO: Aplicar a regra que pega o usuario Rodger , Renan ou Elton
+		Usuario u = new Usuario();
+		u.setId(1l);
+		u.setLogin("eltilopes@gmail.com");
+		u.setNome("elton");
+		u.setCpf("92871259372");;
+		return u;
+	}
 }
