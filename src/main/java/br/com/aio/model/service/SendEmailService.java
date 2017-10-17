@@ -12,7 +12,7 @@ public class SendEmailService {
 	@Inject
 	private MailManager mailManager;
 	
-	public boolean senErro(String login, String erro){
+	public boolean sendErro(String login, String erro){
 		String text = new StringBuilder().append("Um erro ocorreu com o usuário: ")
 				.append(login).append(" usava o sistema.")
 				.append("</ br>")

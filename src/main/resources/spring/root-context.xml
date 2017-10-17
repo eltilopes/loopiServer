@@ -83,7 +83,7 @@
         <property name="port"><value>587</value></property>
         <property name="protocol"><value>smtp</value></property>
         <property name="username"><value>eltilopes@gmail.com</value></property>
-        <property name="password"><value>mirella2706</value></property>
+        <property name="password"><value>sardegna0601</value></property>
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.auth">true</prop>

@@ -27,6 +27,6 @@ public class SendEmailController {
 		if(!authentication.getPrincipal().toString().equals(login)){
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		} 
-		return new ResponseEntity<Boolean>(sendEmail.senErro(login, error), HttpStatus.OK);
+		return new ResponseEntity<Boolean>(sendEmail.sendErro(login, error), HttpStatus.OK);
 	}
 }

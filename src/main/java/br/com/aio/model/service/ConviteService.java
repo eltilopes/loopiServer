@@ -8,9 +8,11 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.aio.exception.BusinessException;
 import br.com.aio.model.entity.Convite;
+import br.com.aio.model.entity.Mail;
 import br.com.aio.model.repository.dao.ConviteDao;
 import br.com.aio.model.repository.hibernate.ConviteRepository;
 import br.com.aio.security.entity.Usuario;
@@ -26,9 +28,12 @@ public class ConviteService {
 	private ConviteRepository repository;
 	@Inject
 	private UsuarioService usuarioService;
+	@Inject
+	private MailManager mailManager;
 	
 	private String chave;
 
+	@Transactional
 	public Convite solicitarConvite(Convite convite) {
 		try {
 			// TODO: handle exception
@@ -41,6 +46,7 @@ public class ConviteService {
 			convite.setChave(chave);
 			convite.setUsuarioCashBack(getUsuarioCashBack());
 			repository.save(convite);
+			enviarEmailConvite(convite.getEmail(), convite.getId());
 			
 		} catch (BusinessException e) {
 			throw new BusinessException(e.getMessage());
@@ -50,6 +56,15 @@ public class ConviteService {
 		return convite;
 	}
 	
+	private void enviarEmailConvite(String emailAddress, Long idConvite) throws Exception {
+		String text = new StringBuilder()
+				.append("Você esta recebendo seu convite, clique no link abaixo para finalizar seu cadastro, se caso você não solicitou isto, por favor desconsidere este email.<br />")
+				.append("<a href=\"https://p538r.app.goo.gl/?link=http://aio.com.br/meu_perfil/").append(idConvite)
+				.append("32654&apn=br.com.aio&afl=http://aio.com.br/meu_perfil")
+				.append("\"> Finalizar Cadastro </a>").toString();
+		String subject = "AIO - Convite";
+		mailManager.sendMail(new Mail("eltilopes@gmail.com", emailAddress, subject, text));
+	}
 
 	private Usuario getUsuarioCashBack() {
 		return usuarioService.getUsuarioCashBack();
