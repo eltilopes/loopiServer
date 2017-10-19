@@ -174,7 +174,7 @@ public class UsuarioService {
 		String text = new StringBuilder()
 				.append("Você solicitou a alteração de senha no AIO Mobile, clique no link abaixo para confirmar, se caso você não solicitou isto, por favor desconsidere este email.<br />")
 				.append("<a href=\"https://p538r.app.goo.gl/?link=http://aio.com.br/meu_perfil/chave:").append(uuid)
-				.append("32654&apn=br.com.aio&afl=http://aio.com.br/meu_perfil")
+				.append("&apn=br.com.aio&afl=http://aio.com.br/meu_perfil")
 				.append("\"> Confirmar Alteração de Senha </a>")
 				.append("<br>").append("Chave: ").append(uuid).toString();
 		String subject = "AIO Mobile - Alteração de Senha";

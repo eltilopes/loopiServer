@@ -59,8 +59,8 @@ public class ConviteService {
 	private void enviarEmailConvite(String emailAddress, Long idConvite) throws Exception {
 		String text = new StringBuilder()
 				.append("Você esta recebendo seu convite, clique no link abaixo para finalizar seu cadastro, se caso você não solicitou isto, por favor desconsidere este email.<br />")
-				.append("<a href=\"https://p538r.app.goo.gl/?link=http://aio.com.br/meu_perfil/id:").append(idConvite)
-				.append("32654&apn=br.com.aio&afl=http://aio.com.br/meu_perfil")
+				.append("<a href=\"https://p538r.app.goo.gl/?link=http://aio.com.br/meu_perfil/id_convite:").append(idConvite)
+				.append("&apn=br.com.aio&afl=http://aio.com.br/meu_perfil")
 				.append("\"> Finalizar Cadastro </a>").toString();
 		String subject = "AIO - Convite";
 		mailManager.sendMail(new Mail("eltilopes@gmail.com", emailAddress, subject, text));
