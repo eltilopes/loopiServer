@@ -172,11 +172,12 @@ public class UsuarioService {
 
 	private void sendMailChangePassword(String emailAddress, String uuid) throws Exception {
 		String text = new StringBuilder()
-				.append("Você solicitou a alteração de senha no SME Mobile, clique no link abaixo para confirmar, se caso você não solicitou isto, por favor desconsidere este email.<br />")
-				//.append("<a href=\"http://api.sme.fortaleza.ce.gov.br/aio/pergunta/?key=").append(uuid)
-				.append("<a href=\"http://172.23.7.125:8080/aio/pergunta/?key=").append(uuid)
-				.append("\"> Confirmar Alteração de Senha </a>").toString();
-		String subject = "SME Mobile - Recadastro";
+				.append("Você solicitou a alteração de senha no AIO Mobile, clique no link abaixo para confirmar, se caso você não solicitou isto, por favor desconsidere este email.<br />")
+				.append("<a href=\"https://p538r.app.goo.gl/?link=http://aio.com.br/meu_perfil/chave:").append(uuid)
+				.append("32654&apn=br.com.aio&afl=http://aio.com.br/meu_perfil")
+				.append("\"> Confirmar Alteração de Senha </a>")
+				.append("<br>").append("Chave: ").append(uuid).toString();
+		String subject = "AIO Mobile - Alteração de Senha";
 
 		sendMail(emailAddress, subject, text);
 	}

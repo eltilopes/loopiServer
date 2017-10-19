@@ -371,20 +371,20 @@ order by um.ci_usuario_mobile
 	
 	<update id="updateUserAux"  parameterType="Map">
 		update tb_usuario_mobile_aux
-			set ds_email = #{login}, ds_senha = #{senha}, ds_chave = #{chave}, fl_ativo = 1, DT_CADASTRO = sysdate
+			set ds_email = #{login}, ds_senha = #{senha}, ds_chave = #{chave}, fl_ativo = 1, DT_CADASTRO = now()
 			where CD_USUARIO_MOBILE = #{idUsuario}
 	</update>
 		
 	<insert id="insertUserAux"  parameterType="Map">
 		insert into tb_usuario_mobile_aux
 				(ci_usuario_mobile_aux, cd_usuario_mobile, ds_email, ds_senha, ds_chave, fl_ativo, dt_cadastro)
-				values(seq_tb_usuario_mobile_aux.nextval, #{idUsuario}, #{login}, #{senha}, #{chave}, 1, sysdate)
+				values(nextval('seq_tb_usuario_mobile_aux'), #{idUsuario}, #{login}, #{senha}, #{chave}, 1, now())
 	</insert>
 	
 	<update id="updateLenghtUser"  parameterType="Map">
-		update tb_usuario_mobile um
-			 set um.update_lenght = #{update_lenght}
-			 where um.CI_USUARIO_MOBILE = #{idUsuario} 
+		update tb_usuario_mobile 
+			 set update_lenght = #{update_lenght}
+			 where CI_USUARIO_MOBILE = #{idUsuario} 
 	</update>
 	
 	<select id="getLenghtUpdateUser" parameterType="Map" resultType="BigDecimal">
@@ -393,17 +393,17 @@ order by um.ci_usuario_mobile
 	</select>
 	
 	<update id="disableUser"  parameterType="Map">
-		update tb_usuario_mobile um
-			set um.fl_ativo = #{ativo}
-			where um.CI_USUARIO_MOBILE = #{idUsuario}
+		update tb_usuario_mobile 
+			set fl_ativo = #{ativo}
+			where CI_USUARIO_MOBILE = #{idUsuario}
 	</update>
 	
 	<update id="updateUser"  parameterType="Map">
-		update tb_usuario_mobile um
-			set um.ds_email = #{login},
-			 um.ds_senha = #{senha},
-			 um.update_lenght = 0
-			where um.CI_USUARIO_MOBILE = #{idUsuario}
+		update tb_usuario_mobile 
+			set ds_email = #{login},
+			 ds_senha = #{senha},
+			 update_lenght = 0
+			where CI_USUARIO_MOBILE = #{idUsuario}
 	</update>
 	
 	
