@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -16,25 +14,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
-@Table(name = "tb_especialidade", schema = "public")
+@Table(name = "tb_categoria", schema = "public")
 @JsonSerialize
-public class Especialidade implements Serializable {
+public class Categoria implements Serializable {
 	
-	private static final long serialVersionUID = -3616721920404525109L;
+	private static final long serialVersionUID = 6939990496592089207L;
 
 	@Id
-	@GeneratedValue(generator = "seq_especialidade", strategy = GenerationType.SEQUENCE)
-	@SequenceGenerator(name = "seq_especialidade", sequenceName="seq_especialidade")
-	@Column(name = "ci_especialidade")
+	@GeneratedValue(generator = "seq_categoria", strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "seq_categoria", sequenceName="seq_categoria")
+	@Column(name = "ci_categoria")
 	private Long id;
 
-	@Column(name = "ds_especialidade")
+	@Column(name = "ds_categoria")
 	@JsonIgnore
 	private String descricao;
-	
-	@ManyToOne
-	@JoinColumn(name = "cd_sub_categoria")
-	private SubCategoria subCategoria;
 	
 	public Long getId() {
 		return id;
@@ -50,14 +44,6 @@ public class Especialidade implements Serializable {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
-
-	public SubCategoria getSubCategoria() {
-		return subCategoria;
-	}
-
-	public void setSubCategoria(SubCategoria subCategoria) {
-		this.subCategoria = subCategoria;
 	}
 
 	@Override
@@ -76,7 +62,7 @@ public class Especialidade implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Especialidade other = (Especialidade) obj;
+		Categoria other = (Categoria) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

@@ -16,25 +16,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
-@Table(name = "tb_especialidade", schema = "public")
+@Table(name = "tb_sub_categoria", schema = "public")
 @JsonSerialize
-public class Especialidade implements Serializable {
+public class SubCategoria implements Serializable {
 	
 	private static final long serialVersionUID = -3616721920404525109L;
 
 	@Id
-	@GeneratedValue(generator = "seq_especialidade", strategy = GenerationType.SEQUENCE)
-	@SequenceGenerator(name = "seq_especialidade", sequenceName="seq_especialidade")
-	@Column(name = "ci_especialidade")
+	@GeneratedValue(generator = "seq_sub_categoria", strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "seq_sub_categoria", sequenceName="seq_sub_categoria")
+	@Column(name = "ci_sub_categoria")
 	private Long id;
 
-	@Column(name = "ds_especialidade")
+	@Column(name = "ds_sub_categoria")
 	@JsonIgnore
 	private String descricao;
 	
 	@ManyToOne
-	@JoinColumn(name = "cd_sub_categoria")
-	private SubCategoria subCategoria;
+	@JoinColumn(name = "cd_categoria")
+	private Categoria categoria;
 	
 	public Long getId() {
 		return id;
@@ -52,12 +52,12 @@ public class Especialidade implements Serializable {
 		this.descricao = descricao;
 	}
 
-	public SubCategoria getSubCategoria() {
-		return subCategoria;
+	public Categoria getCategoria() {
+		return categoria;
 	}
 
-	public void setSubCategoria(SubCategoria subCategoria) {
-		this.subCategoria = subCategoria;
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class Especialidade implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Especialidade other = (Especialidade) obj;
+		SubCategoria other = (SubCategoria) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
