@@ -1,7 +1,5 @@
 package br.com.aio.model.repository.hibernate;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.hibernate.Session;
@@ -9,12 +7,11 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.aio.model.entity.Medico;
-import br.com.aio.security.entity.Usuario;
+import br.com.aio.model.entity.Profissional;
 
 @Repository
 @Transactional
-public class MedicoRepository{
+public class ProfissionalRepository{
 	
 	@Inject
 	private SessionFactory sessionFactory;
@@ -31,16 +28,8 @@ public class MedicoRepository{
 		return getSessionFactory().getCurrentSession();
 	}
 
-	public void save(Medico medico) {
-		getSession().save(medico);
-	}
-	
-	public void update(Usuario medico) {
-		getSession().update(medico);
-	}
-	@SuppressWarnings("unchecked")
-	public List<Medico> getMedicos(){
-		return getSession().createCriteria(Medico.class).list();
+	public void save(Profissional profissional ) {
+		getSession().save(profissional);
 	}
 
 }

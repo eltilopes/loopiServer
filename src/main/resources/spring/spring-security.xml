@@ -10,7 +10,6 @@
                 http://www.springframework.org/schema/security/oauth2 
                 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
 	
-	<security:http pattern="/medico/listar" security="none"  />
 	<security:http pattern="/convite/solicitar" security="none"  />
 
 	<security:http pattern="/oauth/token" create-session="stateless" 
@@ -48,6 +47,7 @@
         -->
         <security:intercept-url pattern="/email/error" access="hasRole('send_email_create')" />
         
+        <security:intercept-url pattern="/profissional/novo" access="permitAll"/>
         
         <security:intercept-url pattern="/mensagem/list/**" access="hasRole('mensagem_read')" />
         <security:intercept-url pattern="/mensagem/recebido/**" access="hasRole('mensagem_read')" />
