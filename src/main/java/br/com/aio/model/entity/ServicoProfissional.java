@@ -12,11 +12,9 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "tb_servico_profissional", schema = "public")
 public class ServicoProfissional{

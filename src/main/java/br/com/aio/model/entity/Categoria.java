@@ -1,7 +1,5 @@
 package br.com.aio.model.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,16 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "tb_categoria", schema = "public")
 @JsonSerialize
-public class Categoria implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Categoria {
 	
-	private static final long serialVersionUID = 6939990496592089207L;
-
 	@Id
 	@GeneratedValue(generator = "seq_categoria", strategy = GenerationType.SEQUENCE)
 	@SequenceGenerator(name = "seq_categoria", sequenceName="seq_categoria")
@@ -27,7 +24,6 @@ public class Categoria implements Serializable {
 	private Long id;
 
 	@Column(name = "ds_categoria")
-	@JsonIgnore
 	private String descricao;
 	
 	public Long getId() {

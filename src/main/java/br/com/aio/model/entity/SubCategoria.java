@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
@@ -29,7 +28,6 @@ public class SubCategoria implements Serializable {
 	private Long id;
 
 	@Column(name = "ds_sub_categoria")
-	@JsonIgnore
 	private String descricao;
 	
 	@ManyToOne
