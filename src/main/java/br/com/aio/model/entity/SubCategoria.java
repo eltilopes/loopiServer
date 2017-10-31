@@ -1,7 +1,5 @@
 package br.com.aio.model.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,15 +10,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "tb_sub_categoria", schema = "public")
 @JsonSerialize
-public class SubCategoria implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SubCategoria {
 	
-	private static final long serialVersionUID = -3616721920404525109L;
-
 	@Id
 	@GeneratedValue(generator = "seq_sub_categoria", strategy = GenerationType.SEQUENCE)
 	@SequenceGenerator(name = "seq_sub_categoria", sequenceName="seq_sub_categoria")

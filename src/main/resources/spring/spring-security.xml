@@ -49,6 +49,7 @@
         
         <security:intercept-url pattern="/profissional/novo" access="permitAll"/>
         <security:intercept-url pattern="/categoria/listar" access="permitAll" />
+        <security:intercept-url pattern="/subcategoria/listar" access="permitAll" />
         
         <security:intercept-url pattern="/mensagem/list/**" access="hasRole('mensagem_read')" />
         <security:intercept-url pattern="/mensagem/recebido/**" access="hasRole('mensagem_read')" />
