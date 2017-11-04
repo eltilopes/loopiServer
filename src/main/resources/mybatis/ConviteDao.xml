@@ -12,12 +12,12 @@
 				  c.ds_email email,
 				  c.nr_cpf cpf,
 				  c.nm_convite nome,
-				  c.ds_chave chave
+				  c.nr_codigo_convite codigoConvite
 			from tb_convite c
 			where c.nr_cpf = #{cpf}
 									
 	</select>
-	<select id="existeChave"
+	<select id="existeCodigoConvite"
 			resultType="br.com.aio.model.entity.Convite">
 			
 			select distinct
@@ -25,9 +25,9 @@
 				  c.ds_email email,
 				  c.nr_cpf cpf,
 				  c.nm_convite nome,
-				  c.ds_chave chave
+				  c.nr_codigo_convite codigoConvite
 			from tb_convite c
-			where c.ds_chave = #{chave}
+			where c.nr_codigo_convite = #{codigoConvite}
 									
 	</select>
 	

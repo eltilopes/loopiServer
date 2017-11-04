@@ -23,10 +23,10 @@ public class ConviteDao {
 		return sqlSession.selectOne("getConvitePorCpf", parameters);
 	}
 
-	public boolean existeChave(String chave) {
+	public boolean existeCodigoConvite(String codigoConvite) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("chave", chave);
-		Convite convite = sqlSession.selectOne("existeChave", parameters);
+		parameters.put("codigoConvite", codigoConvite);
+		Convite convite = sqlSession.selectOne("existeCodigoConvite", parameters);
 		return Objects.nonNull(convite); 
 	}
 	

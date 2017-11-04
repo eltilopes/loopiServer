@@ -58,6 +58,9 @@ public class Usuario implements Serializable{
 	@Column(name = "ds_nome")
 	private String nome;
 	
+	@Column(name = "nr_codigo_convite")
+	private String codigoConvite;
+	
 	@JsonIgnore
 	@NotEmpty
 	@Size(min = 8)
@@ -175,6 +178,14 @@ public class Usuario implements Serializable{
 
 	public void setUpdateLenght(Integer updateLenght) {
 		this.updateLenght = updateLenght;
+	}
+
+	public String getCodigoConvite() {
+		return codigoConvite;
+	}
+
+	public void setCodigoConvite(String codigoConvite) {
+		this.codigoConvite = codigoConvite;
 	}
 
 	@Override

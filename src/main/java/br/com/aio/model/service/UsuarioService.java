@@ -242,7 +242,13 @@ public class UsuarioService {
 		u.setId(1l);
 		u.setLogin("eltilopes@gmail.com");
 		u.setNome("elton");
-		u.setCpf("92871259372");;
+		u.setCpf("92871259372");
+		u.setCodigoConvite("B794A597");
 		return u;
+	}
+
+	public Usuario getUserByCodigoConvite(String codigoConvite) {
+		return usuarioDao.getUserByCodigoConvite(codigoConvite);
+		
 	}
 }

@@ -338,6 +338,18 @@ order by um.ci_usuario_mobile
 		where um.nr_cpf = #{value}
 	</select>
 	
+	<select id="getUserByCodigoConvite" 
+		parameterType="String"
+		resultType="br.com.aio.security.entity.Usuario">
+		select
+			  um.ci_usuario_mobile id,
+			  um.ds_email login,
+			  um.fl_ativo ativo,
+			  um.nr_codigo_convite codigoConvite
+		from tb_usuario_mobile um 
+		where um.nr_codigo_convite = #{value}
+	</select>
+	
 	
 	<select id="getUserByKey" parameterType="String" resultType="br.com.aio.security.entity.Usuario">
 		select

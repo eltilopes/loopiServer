@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.aio.exception.BusinessException;
 import br.com.aio.model.entity.Convite;
 import br.com.aio.model.entity.Mail;
+import br.com.aio.model.entity.enums.Status;
 import br.com.aio.model.repository.dao.ConviteDao;
 import br.com.aio.model.repository.hibernate.ConviteRepository;
 import br.com.aio.security.entity.Usuario;
 import br.com.aio.util.ExceptionMessages;
-import br.com.aio.model.entity.enums.Status;
 
 @Service
 public class ConviteService {
@@ -31,7 +31,7 @@ public class ConviteService {
 	@Inject
 	private MailManager mailManager;
 	
-	private String chave;
+	private String codigoConvite;
 
 	@Transactional
 	public Convite solicitarConvite(Convite convite) {
@@ -42,9 +42,8 @@ public class ConviteService {
 			}
 			convite.setDataCriacao(new Date());
 			convite.setStatus(Status.ATIVO);
-			getNovaChave();
-			convite.setChave(chave);
-			convite.setUsuarioCashBack(getUsuarioCashBack());
+			//getNovaChave();
+			convite.setUsuarioCashBack(getUsuarioCashBack(convite));
 			repository.save(convite);
 			enviarEmailConvite(convite.getEmail(), convite.getId());
 			
@@ -66,8 +65,16 @@ public class ConviteService {
 		mailManager.sendMail(new Mail("eltilopes@gmail.com", emailAddress, subject, text));
 	}
 
-	private Usuario getUsuarioCashBack() {
-		return usuarioService.getUsuarioCashBack();
+	private Usuario getUsuarioCashBack(Convite convite) {
+		Usuario usuario = null;
+		if(Objects.nonNull(convite.getCodigoConvite())){
+			usuario = usuarioService.getUserByCodigoConvite(convite.getCodigoConvite());
+		}
+		if(Objects.isNull(usuario)){
+			usuario = usuarioService.getUsuarioCashBack();
+		}
+		convite.setCodigoConvite(usuario.getCodigoConvite());
+		return usuario;
 	}
 
 
@@ -82,16 +89,16 @@ public class ConviteService {
 		return (conviteDao.getConvite(convite.getCpf()) != null);
 	}
 	
-	private void getNovaChave() throws NoSuchAlgorithmException{
+	private void getNovoCodigoConvite() throws NoSuchAlgorithmException{
 		UUID uuid = UUID.randomUUID();
-		chave = uuid.toString();
-		chave = chave.replace("-", "").toUpperCase().substring(0,8);
-		jaExisteChave();
+		codigoConvite = uuid.toString();
+		codigoConvite = codigoConvite.replace("-", "").toUpperCase().substring(0,8);
+		jaExisteCodigoConvite();
 	}
 
 
-	private void jaExisteChave() throws NoSuchAlgorithmException {
-		if(conviteDao.existeChave(chave)) getNovaChave();
+	private void jaExisteCodigoConvite() throws NoSuchAlgorithmException {
+		if(conviteDao.existeCodigoConvite(codigoConvite)) getNovoCodigoConvite();
 	
 	}
 	

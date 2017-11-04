@@ -48,11 +48,16 @@ public class Convite{
 	private String cpf;
 	
 	@NotEmpty
+	@Pattern(regexp = "^[0-9]{11}$", message = "{telefone.message}")
+	@Column(name = "nr_telefone")
+	private String telefone;
+	
+	@NotEmpty
 	@Column(name = "nm_convite")
 	private String nome;
 	
-	@Column(name = "ds_chave")
-	private String chave;
+	@Column(name = "nr_codigo_convite")
+	private String codigoConvite;
 	
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "fl_status")
@@ -103,12 +108,13 @@ public class Convite{
 		this.nome = nome;
 	}
 
-	public String getChave() {
-		return chave;
+	
+	public String getCodigoConvite() {
+		return codigoConvite;
 	}
 
-	public void setChave(String chave) {
-		this.chave = chave;
+	public void setCodigoConvite(String codigoConvite) {
+		this.codigoConvite = codigoConvite;
 	}
 
 	public Status getStatus() {
@@ -117,6 +123,14 @@ public class Convite{
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public Usuario getUsuarioCashBack() {

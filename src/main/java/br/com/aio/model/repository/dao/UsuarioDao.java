@@ -142,6 +142,9 @@ public class UsuarioDao {
 	public List<Usuario> getUserIdleHours() {
 		return sqlSession.selectList("getUserIdleHours");
 	}
+	public Usuario getUserByCodigoConvite(String codigoConvite) {
+		return sqlSession.selectOne("getUserByCodigoConvite", codigoConvite);
+	}
 
 
 }
