@@ -1,6 +1,9 @@
 package br.com.aio.controller;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.aio.exception.BusinessException;
 import br.com.aio.model.entity.ServicoProfissional;
+import br.com.aio.model.entity.vo.ServicoCardVo;
 import br.com.aio.model.service.ServicoProfissionalService;
 
 @RestController
@@ -30,5 +34,18 @@ public class ServicoProfissionalController {
 		} catch (BusinessException e) {
 			throw new BusinessException(e.getMessage());
 		} 
+	}
+	
+	@RequestMapping(value = "/listar", method = GET)
+	public ResponseEntity<List<ServicoCardVo>> getServicos(){
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		if(!authentication.getPrincipal().toString().equals(login)){
+//				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//		} 
+		List<ServicoCardVo> servicos = servicoProfissionalService.getServicos();
+		if(servicos.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<ServicoCardVo>>(servicos, HttpStatus.OK);
 	}
 }

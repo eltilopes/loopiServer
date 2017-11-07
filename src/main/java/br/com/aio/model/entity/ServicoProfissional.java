@@ -94,6 +94,13 @@ public class ServicoProfissional{
 		this.especialidade = especialidade;
 	}
 
+	public Profissional getProfissional() {
+		return profissional;
+	}
+
+	public void setProfissional(Profissional profissional) {
+		this.profissional = profissional;
+	}
 
 	@Override
 	public int hashCode() {

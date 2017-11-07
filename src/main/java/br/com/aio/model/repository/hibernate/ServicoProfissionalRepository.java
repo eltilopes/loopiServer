@@ -1,5 +1,7 @@
 package br.com.aio.model.repository.hibernate;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.hibernate.Session;
@@ -30,6 +32,11 @@ public class ServicoProfissionalRepository{
 
 	public void save(ServicoProfissional servicoProfissional ) {
 		getSession().save(servicoProfissional);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ServicoProfissional> getServicos(){
+		return getSession().createCriteria(ServicoProfissional.class).list();
 	}
 
 }

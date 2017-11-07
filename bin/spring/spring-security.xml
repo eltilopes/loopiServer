@@ -47,6 +47,8 @@
         -->
         <security:intercept-url pattern="/email/error" access="hasRole('send_email_create')" />
         
+        <security:intercept-url pattern="/servico/novo" access="permitAll"/>
+        <security:intercept-url pattern="/servico/listar" access="permitAll" />
         <security:intercept-url pattern="/profissional/novo" access="permitAll"/>
         <security:intercept-url pattern="/categoria/listar" access="permitAll" />
         <security:intercept-url pattern="/subcategoria/listar" access="permitAll" />

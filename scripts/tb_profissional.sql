@@ -43,3 +43,6 @@ CREATE SEQUENCE seq_profissional
   CACHE 20;
 ALTER TABLE seq_profissional
   OWNER TO postgres;
+  
+  
+  ALTER TABLE tb_profissional ADD COLUMN ds_url_imagem character varying(256);

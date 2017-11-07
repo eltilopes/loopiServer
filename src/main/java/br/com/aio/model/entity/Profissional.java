@@ -40,6 +40,9 @@ public class Profissional {
 	@JoinColumn(name = "cd_categoria")
     private Categoria categoria;
 	
+	@Column(name = "ds_url_imagem")
+	private String urlImagem;
+	
 	@ManyToOne
 	@JoinColumn(name = "cd_sub_categoria")
     private SubCategoria subCategoria;
@@ -98,6 +101,14 @@ public class Profissional {
 
 	public void setServicos(List<ServicoProfissional> servicos) {
 		this.servicos = servicos;
+	}
+
+	public String getUrlImagem() {
+		return urlImagem;
+	}
+
+	public void setUrlImagem(String urlImagem) {
+		this.urlImagem = urlImagem;
 	}
 
 	@Override

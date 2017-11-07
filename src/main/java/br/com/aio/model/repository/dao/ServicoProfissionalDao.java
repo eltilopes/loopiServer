@@ -5,7 +5,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ServicoProfissionalDao {
 	
-	/*@Inject
-	private SqlSession sqlSession;*/
+//	@Inject
+//	private SqlSession sqlSession;
+
 	
 }
