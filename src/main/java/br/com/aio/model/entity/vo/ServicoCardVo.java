@@ -17,6 +17,7 @@ public class ServicoCardVo {
 
 	private Long id;
 	private String title;
+	private String descricao;
 	private String thumbnail;
 	private Categoria categoria;
 	private SubCategoria subCategoria;
@@ -39,6 +40,7 @@ public class ServicoCardVo {
 		tempo = servicoProfissional.getTempo();
 		estrelas = 3;
 		favorito = true;
+		descricao = servicoProfissional.getNome();
 	}
 
 	public Long getId() {
@@ -136,6 +138,14 @@ public class ServicoCardVo {
 
 	public void setEspecialidade(Especialidade especialidade) {
 		this.especialidade = especialidade;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 }
