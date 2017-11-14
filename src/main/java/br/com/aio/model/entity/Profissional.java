@@ -41,15 +41,21 @@ public class Profissional {
     private Categoria categoria;
 	
 	@Column(name = "ds_url_imagem")
+	@JsonIgnore
 	private String urlImagem;
 	
 	@ManyToOne
 	@JoinColumn(name = "cd_sub_categoria")
     private SubCategoria subCategoria;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "cd_especialidade")
     private Especialidade especialidade;
+
+	@ManyToOne
+	@JoinColumn(name = "cd_localizacao")
+	@JsonIgnore
+    private Localizacao localizacao;
 	
 	@OneToMany(mappedBy = "profissional", fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -109,6 +115,14 @@ public class Profissional {
 
 	public void setUrlImagem(String urlImagem) {
 		this.urlImagem = urlImagem;
+	}
+
+	public Localizacao getLocalizacao() {
+		return localizacao;
+	}
+
+	public void setLocalizacao(Localizacao localizacao) {
+		this.localizacao = localizacao;
 	}
 
 	@Override

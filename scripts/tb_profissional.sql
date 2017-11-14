@@ -46,3 +46,4 @@ ALTER TABLE seq_profissional
   
   
   ALTER TABLE tb_profissional ADD COLUMN ds_url_imagem character varying(256);
+  ALTER TABLE tb_profissional ADD COLUMN cd_localizacao bigint;

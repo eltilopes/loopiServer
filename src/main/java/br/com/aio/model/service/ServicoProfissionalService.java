@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.aio.exception.BusinessException;
+import br.com.aio.model.entity.Profissional;
 import br.com.aio.model.entity.ServicoProfissional;
 import br.com.aio.model.entity.vo.FiltroVo;
-import br.com.aio.model.entity.vo.LocalizacaoProfissionalVO;
 import br.com.aio.model.entity.vo.ServicoCardVo;
 import br.com.aio.model.repository.hibernate.ServicoProfissionalRepository;
 import br.com.aio.util.ExceptionMessages;
@@ -40,23 +40,20 @@ public class ServicoProfissionalService {
 	}
 
 	public List<ServicoCardVo> getServicos(FiltroVo filtro) {
-		List<LocalizacaoProfissionalVO> localizacaoProfissionalVOs = LocalizacaoProfissionalVO.getLocalizacoes();
 		List<ServicoCardVo> servicos = new ArrayList<ServicoCardVo>();
 		List<ServicoProfissional> lista = repository.getServicos(filtro);
-		int i = 0;
 		for(ServicoProfissional sp : lista){
-			servicos.add(getServicoCardVo(sp, localizacaoProfissionalVOs.get(i++)));
-			if(i == 9) i = 0;
+			servicos.add(new ServicoCardVo(sp));
 		}
 		return servicos;
 	}
-
-	private ServicoCardVo getServicoCardVo(ServicoProfissional servicoProfissional, LocalizacaoProfissionalVO localizacaoProfissionalVO) {
-		ServicoCardVo servicoCardVo = new ServicoCardVo(servicoProfissional);
-		servicoCardVo.setLatitude(localizacaoProfissionalVO.getLatitude());
-		servicoCardVo.setLongitude(localizacaoProfissionalVO.getLongitude());
-		return servicoCardVo;
+	public List<ServicoCardVo> getServicos(Profissional profissional) {
+		List<ServicoCardVo> servicos = new ArrayList<ServicoCardVo>();
+		List<ServicoProfissional> lista = repository.getServicos(profissional);
+		for(ServicoProfissional sp : lista){
+			servicos.add(new ServicoCardVo(sp));
+		}
+		return servicos;
 	}
-	
 	
 }

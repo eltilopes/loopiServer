@@ -27,10 +27,11 @@ public class ServicoProfissionalController {
 	private ServicoProfissionalService servicoProfissionalService;
 	
 	@RequestMapping(value = "/novo", method = POST)
-	public ResponseEntity<ServicoProfissional> salvar(@Valid @RequestBody ServicoProfissional servicoProfissional){
+	public ResponseEntity<List<ServicoCardVo>> salvar(@Valid @RequestBody ServicoProfissional servicoProfissional){
 		try {
 			servicoProfissionalService.salvar(servicoProfissional);
-			return new ResponseEntity<ServicoProfissional>(servicoProfissional, HttpStatus.CREATED);
+			List<ServicoCardVo> servicos = servicoProfissionalService.getServicos(servicoProfissional.getProfissional());
+			return new ResponseEntity<List<ServicoCardVo>>(servicos, HttpStatus.CREATED);
 		} catch (BusinessException e) {
 			throw new BusinessException(e.getMessage());
 		} 

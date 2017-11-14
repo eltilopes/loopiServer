@@ -41,6 +41,8 @@ public class ServicoCardVo {
 		estrelas = 3;
 		favorito = true;
 		descricao = servicoProfissional.getNome();
+		latitude = servicoProfissional.getProfissional().getLocalizacao().getLatitude();
+		longitude = servicoProfissional.getProfissional().getLocalizacao().getLongitude();
 	}
 
 	public Long getId() {

@@ -18,6 +18,21 @@ public class FiltroVo {
     private SubCategoria subCategoria;
     private Especialidade especialidade;
     private String pesquisaToolbar;
+    private Boolean menorValor;
+    private Boolean ordemAlfabeticaCrescente;
+    
+	public Boolean getMenorValor() {
+		return menorValor;
+	}
+	public void setMenorValor(Boolean menorValor) {
+		this.menorValor = menorValor;
+	}
+	public Boolean getOrdemAlfabeticaCrescente() {
+		return ordemAlfabeticaCrescente;
+	}
+	public void setOrdemAlfabeticaCrescente(Boolean ordemAlfabeticaCrescente) {
+		this.ordemAlfabeticaCrescente = ordemAlfabeticaCrescente;
+	}
 	public Categoria getCategoria() {
 		return categoria;
 	}
@@ -45,6 +60,5 @@ public class FiltroVo {
 	public void setPesquisaToolbar(String pesquisaToolbar) {
 		this.pesquisaToolbar = pesquisaToolbar;
 	}
-
 	
 }
