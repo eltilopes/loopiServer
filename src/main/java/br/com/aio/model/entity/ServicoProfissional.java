@@ -2,6 +2,7 @@ package br.com.aio.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public class ServicoProfissional{
 	@JoinColumn(name = "cd_especialidade")
 	private Especialidade especialidade ;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cd_profissional")
 	private Profissional profissional;
 

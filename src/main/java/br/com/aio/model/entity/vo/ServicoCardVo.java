@@ -1,5 +1,7 @@
 package br.com.aio.model.entity.vo;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -7,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import br.com.aio.model.entity.Categoria;
 import br.com.aio.model.entity.Especialidade;
+import br.com.aio.model.entity.Profissional;
 import br.com.aio.model.entity.ServicoProfissional;
 import br.com.aio.model.entity.SubCategoria;
 
@@ -28,21 +31,26 @@ public class ServicoCardVo {
 	private Boolean favorito;
 	private Double latitude;
 	private Double longitude;
+	private List<ServicoProfissional> servicos;
 
-	public ServicoCardVo(ServicoProfissional servicoProfissional) {
-		id = servicoProfissional.getId();
-		title = servicoProfissional.getProfissional().getUsuario().getNome();
-		thumbnail = servicoProfissional.getProfissional().getUrlImagem();
-		categoria = servicoProfissional.getProfissional().getCategoria();
-		subCategoria = servicoProfissional.getProfissional().getSubCategoria();
-		especialidade = servicoProfissional.getEspecialidade();
-		preco = servicoProfissional.getValor();
-		tempo = servicoProfissional.getTempo();
+	public ServicoCardVo(Profissional profissional) {
+		id = profissional.getId();
+		title = profissional.getUsuario().getNome();
+		thumbnail = profissional.getUrlImagem();
+		categoria = profissional.getCategoria();
+		subCategoria = profissional.getSubCategoria();
+		especialidade = profissional.getEspecialidade();
+		latitude = profissional.getLocalizacao().getLatitude();
+		longitude = profissional.getLocalizacao().getLongitude();
 		estrelas = 3;
 		favorito = true;
-		descricao = servicoProfissional.getNome();
-		latitude = servicoProfissional.getProfissional().getLocalizacao().getLatitude();
-		longitude = servicoProfissional.getProfissional().getLocalizacao().getLongitude();
+		if(!profissional.getServicos().isEmpty() && profissional.getServicos().size()==1){
+			preco = profissional.getServicos().get(0).getValor();
+			tempo = profissional.getServicos().get(0).getTempo();
+			descricao = profissional.getServicos().get(0).getNome();
+		}
+		setServicos(profissional.getServicos());
+		
 	}
 
 	public Long getId() {
@@ -148,6 +156,14 @@ public class ServicoCardVo {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public List<ServicoProfissional> getServicos() {
+		return servicos;
+	}
+
+	public void setServicos(List<ServicoProfissional> servicos) {
+		this.servicos = servicos;
 	}
 
 }

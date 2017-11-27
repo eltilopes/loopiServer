@@ -17,25 +17,28 @@ import br.com.aio.exception.BusinessException;
 import br.com.aio.model.entity.ServicoProfissional;
 import br.com.aio.model.entity.vo.FiltroVo;
 import br.com.aio.model.entity.vo.ServicoCardVo;
+import br.com.aio.model.service.ProfissionalService;
 import br.com.aio.model.service.ServicoProfissionalService;
 
 @RestController
 @RequestMapping("/servico")
 public class ServicoProfissionalController {
-	
+
 	@Inject
 	private ServicoProfissionalService servicoProfissionalService;
+	@Inject
+	private ProfissionalService profissionalService;
 	
-	@RequestMapping(value = "/novo", method = POST)
-	public ResponseEntity<List<ServicoCardVo>> salvar(@Valid @RequestBody ServicoProfissional servicoProfissional){
-		try {
-			servicoProfissionalService.salvar(servicoProfissional);
-			List<ServicoCardVo> servicos = servicoProfissionalService.getServicos(servicoProfissional.getProfissional());
-			return new ResponseEntity<List<ServicoCardVo>>(servicos, HttpStatus.CREATED);
-		} catch (BusinessException e) {
-			throw new BusinessException(e.getMessage());
-		} 
-	}
+//	@RequestMapping(value = "/novo", method = POST)
+//	public ResponseEntity<List<ServicoCardVo>> salvar(@Valid @RequestBody ServicoProfissional servicoProfissional){
+//		try {
+//			servicoProfissionalService.salvar(servicoProfissional);
+//			List<ServicoCardVo> servicos = servicoProfissionalService.getServicos(servicoProfissional.getProfissional());
+//			return new ResponseEntity<List<ServicoCardVo>>(servicos, HttpStatus.CREATED);
+//		} catch (BusinessException e) {
+//			throw new BusinessException(e.getMessage());
+//		} 
+//	}
 	
 	@RequestMapping(value = "/listar", method = POST)
 	public ResponseEntity<List<ServicoCardVo>> getServicos(@Valid @RequestBody FiltroVo filtroVo){
@@ -43,7 +46,7 @@ public class ServicoProfissionalController {
 //		if(!authentication.getPrincipal().toString().equals(login)){
 //				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 //		} 
-		List<ServicoCardVo> servicos = servicoProfissionalService.getServicos(filtroVo);
+		List<ServicoCardVo> servicos = profissionalService.getProfissionais(filtroVo);
 		if(servicos.isEmpty()){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}

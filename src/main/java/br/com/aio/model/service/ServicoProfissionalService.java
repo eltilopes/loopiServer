@@ -39,21 +39,21 @@ public class ServicoProfissionalService {
 		return servicoProfissional;
 	}
 
-	public List<ServicoCardVo> getServicos(FiltroVo filtro) {
-		List<ServicoCardVo> servicos = new ArrayList<ServicoCardVo>();
-		List<ServicoProfissional> lista = repository.getServicos(filtro);
-		for(ServicoProfissional sp : lista){
-			servicos.add(new ServicoCardVo(sp));
-		}
-		return servicos;
-	}
-	public List<ServicoCardVo> getServicos(Profissional profissional) {
-		List<ServicoCardVo> servicos = new ArrayList<ServicoCardVo>();
-		List<ServicoProfissional> lista = repository.getServicos(profissional);
-		for(ServicoProfissional sp : lista){
-			servicos.add(new ServicoCardVo(sp));
-		}
-		return servicos;
-	}
+//	public List<ServicoCardVo> getServicos(FiltroVo filtro) {
+//		List<ServicoCardVo> servicos = new ArrayList<ServicoCardVo>();
+//		List<ServicoProfissional> lista = repository.getServicos(filtro);
+//		for(ServicoProfissional sp : lista){
+//			servicos.add(new ServicoCardVo(sp));
+//		}
+//		return servicos;
+//	}
+//	public List<ServicoCardVo> getServicos(Profissional profissional) {
+//		List<ServicoCardVo> servicos = new ArrayList<ServicoCardVo>();
+//		List<ServicoProfissional> lista = repository.getServicos(profissional);
+//		for(ServicoProfissional sp : lista){
+//			servicos.add(new ServicoCardVo(sp));
+//		}
+//		return servicos;
+//	}
 	
 }

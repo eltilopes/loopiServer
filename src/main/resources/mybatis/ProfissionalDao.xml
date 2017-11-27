@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.ProfissionalDao">
+
+	
+	<resultMap type="br.com.aio.model.entity.Profissional" id="resultProfissional">
+		<id property="id" column="ci_profissional"/>
+		<result property="urlImagem" column="ds_url_imagem" />
+		<association property="usuario" javaType="br.com.aio.security.entity.Usuario">
+			<id property="id" column="ci_usuario_mobile"/>
+			<result property="nome" column="ds_nome" />
+		</association>
+		<association property="categoria" javaType="br.com.aio.model.entity.Categoria">
+			<id property="id" column="ci_categoria"/>
+			<result property="descricao" column="ds_categoria" />
+		</association>
+		
+		<association property="subCategoria" javaType="br.com.aio.model.entity.SubCategoria">
+			<id property="id" column="ci_sub_categoria"/>
+			<result property="descricao" column="ds_sub_categoria" />
+		</association>
+		
+		<association property="especialidade" javaType="br.com.aio.model.entity.Especialidade">
+			<id property="id" column="ci_especialidade"/>
+			<result property="descricao" column="ds_especialidade" />
+		</association>
+
+		<association property="localizacao" javaType="br.com.aio.model.entity.Localizacao">
+			<id property="id" column="ci_localizacao"/>
+			<result property="latitude" column="nr_latitude" />
+			<result property="longitude" column="nr_longitude" />
+		</association>
+
+		<collection property="servicos" javaType="ArrayList" ofType="br.com.aio.model.entity.ServicoProfissional" >
+		    <id property="id" column="ci_servico_profissional"/>
+		    <result property="nome" column="nm_servico_profissional"/>
+			<result property="descricao" column="ds_servico_profissional"/>
+			<result property="tempo" column="nr_tempo"/>
+			<result property="valor" column="nr_valor"/>
+		</collection>	
+	</resultMap>
+	
+	
+	<select id="getProfissionais" resultMap="resultProfissional" parameterType="Map">
+		SELECT 
+		  p.ci_profissional, 
+		  p.ds_url_imagem, 
+		  um.ci_usuario_mobile, 
+		  um.ds_nome, 
+		  l.ci_localizacao, 
+		  l.nr_latitude, 
+		  l.nr_longitude, 
+		  sp.ci_servico_profissional, 
+		  sp.nm_servico_profissional, 
+		  sp.ds_servico_profissional, 
+		  sp.nr_tempo, 
+		  sp.nr_valor, 
+		  e.ds_especialidade, 
+		  e.ci_especialidade, 
+		  sc.ci_sub_categoria, 
+		  sc.ds_sub_categoria, 
+		  c.ci_categoria, 
+		  c.ds_categoria
+		FROM 
+		  tb_profissional p
+		INNER JOIN tb_localizacao l ON l.ci_localizacao = p.cd_localizacao
+		INNER JOIN tb_servico_profissional sp ON sp.cd_profissional = p.ci_profissional
+		INNER JOIN tb_usuario_mobile um ON um.ci_usuario_mobile = p.cd_usuario
+		INNER JOIN tb_especialidade e ON e.ci_especialidade = p.cd_especialidade
+		INNER JOIN tb_sub_categoria sc ON sc.ci_sub_categoria = p.cd_sub_categoria 
+		INNER JOIN tb_categoria c ON c.ci_categoria = p.cd_categoria 
+
+
+	</select>
+	
+</mapper>
