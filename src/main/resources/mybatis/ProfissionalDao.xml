@@ -72,7 +72,40 @@
 		INNER JOIN tb_especialidade e ON e.ci_especialidade = p.cd_especialidade
 		INNER JOIN tb_sub_categoria sc ON sc.ci_sub_categoria = p.cd_sub_categoria 
 		INNER JOIN tb_categoria c ON c.ci_categoria = p.cd_categoria 
-
+		WHERE 1 = 1 
+		<if test="pesquisaToolbar != null and pesquisaToolbar != '' ">
+			 AND (um.ds_nome ilike ${pesquisaToolbarLike} OR 
+					 sp.nm_servico_profissional ilike ${pesquisaToolbarLike} OR 
+					 sp.ds_servico_profissional ilike ${pesquisaToolbarLike} OR 
+					 e.ds_especialidade ilike ${pesquisaToolbarLike} OR 
+					 sc.ds_sub_categoria ilike ${pesquisaToolbarLike} OR 
+					 c.ds_categoria ilike ${pesquisaToolbarLike} )
+		</if>
+		<if test="idCategoria != null ">
+			 AND c.ci_categoria = ${idCategoria} 
+		</if>
+		<if test="idSubCategoria != null ">
+			 AND sc.ci_sub_categoria = ${idSubCategoria} 
+		</if>
+		<if test="idEspecialidade != null ">
+			 AND e.ds_especialidade = ${idEspecialidade} 
+		</if>
+		
+		ORDER BY sp.ci_servico_profissional DESC
+		<if test="menorValor != null">
+			<choose>
+	           <when test="menorValor == true"> ,sp.nr_valor ASC</when>
+	           <otherwise>,sp.nr_valor DESC</otherwise>
+           	</choose>
+        </if>
+        <if test="ordemAlfabeticaCrescente != null">
+			
+			<choose>
+	           <when test="ordemAlfabeticaCrescente == true">, um.ds_nome ASC</when>
+	           <otherwise>,um.ds_nome DESC</otherwise>
+           	</choose>
+        </if>
+		
 
 	</select>
 	

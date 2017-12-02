@@ -55,7 +55,7 @@ public class FiltroVo {
 		return pesquisaToolbar;
 	}
 	public String getPesquisaToolbarLike() {
-		return "%" + pesquisaToolbar + "%";
+		return "'%" + pesquisaToolbar + "%'";
 	}
 	public void setPesquisaToolbar(String pesquisaToolbar) {
 		this.pesquisaToolbar = pesquisaToolbar;
