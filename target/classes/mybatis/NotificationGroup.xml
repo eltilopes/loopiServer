@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.RoleDao">
+
+    <select id="getGroups"
+			resultType="br.com.aio.model.entity.vo.NotificationGroupVo">
+		
+		SELECT ng.ci_mobile_notification_group as idGroup,
+	       ng.nm_group as nmGroup, 
+	       ng.FL_ATIVO as status,
+	       count(um.ci_usuario_mobile) as qtdUsers
+		  FROM tb_mobile_notification_group ng
+		  LEFT JOIN notification_group_has_usuario nu
+		    ON nu.ci_mobile_notification_group = ng.ci_mobile_notification_group
+		  LEFT JOIN tb_usuario_mobile um
+		    ON um.ci_usuario_mobile = nu.ci_usuario_mobile
+		    where ng.FL_ATIVO = 1
+		    GROUP BY ng.nm_group, ng.ci_mobile_notification_group, ng.FL_ATIVO
+	
+	</select>
+	
+	<select id="getGroupByName"
+			parameterType="Map"
+			resultType="br.com.aio.model.entity.NotificationGroup">
+				
+			SELECT ng.ci_mobile_notification_group as id,
+			       ng.nm_group as nameGroup
+			  FROM tb_mobile_notification_group ng
+			  where 1=1
+			  	and ng.FL_ATIVO = 1
+   			<if test="name != null">
+   				and UPPER(ng.nm_group) like upper(#{name} || '%')
+			</if>
+       
+	</select>
+	
+	
+</mapper>

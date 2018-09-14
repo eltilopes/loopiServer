@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.UsuarioDao">
+
+	<select id="getUserIdleHours"
+			parameterType="Map"
+			resultType="br.com.aio.security.entity.Usuario">
+	
+	select um.ci_usuario_mobile id,
+       f.nr_cpf cpf,
+       um.ds_email login,
+       f.nm_funcionario nome,
+       um.fl_ativo ativo,
+       um.cd_funcionario,
+       um.update_lenght updateLenght
+ 		 from (select *
+          from (select v.ci_vinculo,
+                       round((v.nr_carga_horaria +
+                             (sum(nvl(ad.nr_carga_horaria, 0) *
+                                   decode(ad.tipo, 0, 1, 1, -1, 0)))) * 0.84) ch_contrato,
+                       v.nr_carga_horaria ch_vinculo,
+                       v.nr_matricula,
+                       v.cd_funcionario,
+                       lotacao.ch_regencia,
+                       lotacao.ch_planejamento
+                  from (select rl.cd_vinculo,
+                               sum(rl.ch_regencia) ch_regencia,
+                               sum(rl.ch_planejamento) ch_planejamento
+                          from (select lot.cd_vinculo,
+                                       (ch_regencia + ch_regencia_eja) ch_regencia,
+                                       ((case
+                                         when (ch_regencia between 4 and 27) then
+                                          rf.nr_carga_horaria_planejamento
+                                         when ch_regencia > 27 then
+                                          ch_regencia * 0.5
+                                         else
+                                          0
+                                       end) + (case
+                                         when (ch_regencia_eja >= 4) then
+                                          ch_regencia_eja * 0.25
+                                         else
+                                          0
+                                       end)) ch_planejamento
+                                  from (select lp.cd_vinculo,
+                                               sum(decode(m.ci_modalidade,
+                                                          5,
+                                                          0,
+                                                          lp.nr_carga_horaria)) ch_regencia,
+                                               sum(decode(m.ci_modalidade,
+                                                          5,
+                                                          lp.nr_carga_horaria,
+                                                          0)) ch_regencia_eja
+                                          from rh.tb_lotacao_professor lp
+                                          join educacao.tb_classe c
+                                            on c.CI_CLASSE = lp.cd_turma
+                                          join educacao.tb_serie s
+                                            on s.ci_serie = c.cd_serie
+                                          join educacao.tb_modalidade m
+                                            on m.CI_MODALIDADE = s.CD_MODALIDADE
+                                           and m.FL_ATIVO = 1
+                                         where 1 = 1
+                                           and lp.fl_ativo = 1
+                                           and trunc(sysdate) between
+                                               lp.dt_inicio and lp.dt_fim
+                                         group by lp.cd_vinculo) lot
+                                  left join rh.tb_ch_regencia_planejamento rf
+                                    on (rf.nr_carga_horaria_regencia =
+                                       lot.ch_regencia)
+                                union
+                                select ol.cd_vinculo,
+                                       sum(ol.nr_carga_horaria) ch_regencia,
+                                       0 ch_planejamento
+                                  from rh.tb_outra_lotacao ol
+                                  join rh.tb_atividade a
+                                    on a.ci_atividade = ol.cd_atividade
+                                 where 1 = 1
+                                   and ol.fl_ativo = 1
+                                   and trunc(sysdate) between ol.dt_inicio and
+                                       ol.dt_fim
+                                   and a.tp_atividade in ('D', 'R')
+                                 group by ol.cd_vinculo) rl
+                         group by rl.cd_vinculo) lotacao
+                  join rh.tb_vinculo v
+                    on (v.ci_vinculo = lotacao.cd_vinculo and
+                       v.cd_tipo_vinculo = 2)
+                  left join rh.tb_aditivo_ch ad
+                    on (ad.cd_vinculo = v.ci_vinculo and ad.fl_ativo = 1 and
+                       trunc(sysdate) between ad.dt_inicial and
+                       nvl(ad.dt_final, trunc(sysdate)))
+                 where 1 = 1
+                 group by v.ci_vinculo,
+                          v.nr_matricula,
+                          v.cd_funcionario,
+                          v.nr_carga_horaria,
+                          lotacao.ch_regencia,
+                          lotacao.ch_planejamento) tb01
+         where 1 = 1
+           and (ch_contrato - (ch_regencia + ch_planejamento)) > 0) ociosos
+  join rh.tb_funcionario f
+    on f.ci_funcionario = ociosos.cd_funcionario
+    join tb_usuario_mobile um
+    on um.cd_funcionario = f.ci_funcionario
+  join (select distinct cd_vinculo
+          from (select lp.cd_vinculo, escola.ci_unidade_trabalho
+                  from rh.tb_lotacao_professor lp
+                  join educacao.tb_classe c
+                    on c.CI_CLASSE = lp.cd_turma
+                  join educacao.tb_serie s
+                    on s.ci_serie = c.cd_serie
+                  join educacao.tb_modalidade m
+                    on m.CI_MODALIDADE = s.CD_MODALIDADE
+                   and m.FL_ATIVO = 1
+                  join util.tb_unidade_trabalho escola
+                    on (escola.ci_unidade_trabalho = lp.cd_unidade_trabalho)
+                 where 1 = 1
+                   and lp.fl_ativo = 1
+                   and trunc(sysdate) between lp.dt_inicio and lp.dt_fim)
+         where 1 = 1) lotacao
+    on ociosos.ci_vinculo = lotacao.cd_vinculo
+    where 1 =1
+			
+	</select>
+
+	<select id="getUsersByGroupDefault"
+			parameterType="Map"
+			resultType="br.com.aio.security.entity.Usuario">
+			
+		select  ci_usuario_mobile id,
+				"funcionario.cpf" cpf,
+		   		ds_email login,
+        		"funcionario.nome" nome,
+        		fl_ativo ativo,
+        		cd_funcionario,
+        		update_lenght updateLenght,
+        		administrativo,
+        		magisterio,
+        		substituto
+		  from
+		(
+		  select um.*
+		         ,vinc.nr_matricula as matricula
+		         ,fn.nr_cpf as "funcionario.cpf"
+		         ,fn.nm_funcionario as "funcionario.nome"
+		         ,(case when  (cg.tp_lotacao = 'R') then 1 else 0 end) magisterio
+		         ,(case when  (cg.tp_lotacao in ('A', 'T')) then 1 else 0 end) administrativo
+		         ,(decode(vinc.cd_tipo_vinculo, 5, 1, 0)) substituto
+		     from tb_usuario_mobile um
+		     join rh.tb_funcionario fn on (fn.ci_funcionario = um.cd_funcionario)
+		     join rh.tb_vinculo vinc on (vinc.cd_funcionario = um.cd_funcionario)
+		     join rh.tb_tipo_vinculo tpVinc on (tpVinc.ci_tipo_vinculo = vinc.cd_tipo_vinculo)
+		     left join rh.tb_provimento prov on (prov.cd_vinculo = vinc.ci_vinculo and prov.dt_final is null)
+		     left join rh.tb_referencia referencia on (referencia.ci_referencia = prov.cd_referencia)
+		     left join rh.tb_carreira c on (c.ci_carreira = referencia.cd_carreira)
+		     left join rh.tb_nivel_classificacao nc on (nc.ci_nivel_classificacao = c.cd_nivel_classificacao)
+		     left join rh.tb_cargo cg on (cg.ci_cargo = nc.cd_cargo)
+		) us
+		where 1=1
+
+		<if test="administrativo != null">
+			and us.administrativo = #{administrativo}
+		</if>
+		<if test="substituto != null">
+			and us.substituto = #{substituto}
+		</if>
+		<if test="magisterio != null">
+			and us.magisterio = #{magisterio}
+		</if>
+	
+	</select>
+
+    <select id="buscarUsuarioLoginSenha"
+    		parameterType="Map"
+			resultType="br.com.aio.security.entity.UsuarioAuth">
+			select 
+				u.ci_usuario_mobile id,
+				u.ds_nome nome,
+				u.nr_cpf cpf,
+				u.ds_email login
+			from tb_usuario_mobile u
+			where u.nr_cpf = #{login}
+			and u.ds_senha = #{senha}
+			and u.fl_ativo = 1
+	</select>
+	
+	  <select id="buscarUsuarioApiSmeLoginSenha"
+    		parameterType="Map"
+			resultType="br.com.aio.security.entity.UsuarioAuth">
+			select  u.ci_usuario as id,
+					u.nm_usuario as nome,
+					u.nm_login as login,
+					u.nm_cpf as cpf
+			  from util.tb_usuario u
+			 where UPPER(u.nm_login) = UPPER(#{login})
+			   and u.nm_senha = #{senha}
+	</select>
+	
+	<select id="buscarUsuarioLogin"
+    		parameterType="Map"
+			resultType="br.com.aio.security.entity.Usuario">
+			select
+				u.ci_usuario_mobile id,
+				u.ds_email login,
+				u.ds_senha senha
+			from tb_usuario_mobile u
+			where u.ds_email = #{login}
+	</select>
+	
+	<select id="getUsers"
+			parameterType="Map"
+			resultType="br.com.aio.security.entity.Usuario">
+			
+			
+select distinct
+	um.ci_usuario_mobile id,
+	um.ds_email login,
+	um.ds_senha senha,
+	um.fl_ativo ativo,
+	um.cd_funcionario
+from tb_usuario_mobile um 
+ where 1=1
+	and upper(um.ds_email) like upper( #{nome} || '%' )
+order by um.ci_usuario_mobile
+			
+	</select>
+	
+	<select id="getUsersByGroup"
+			parameterType="Map"
+			resultType="br.com.aio.security.entity.Usuario">
+			 select um.ci_usuario_mobile id,
+		       f.nr_cpf cpf,
+				   um.ds_email login,
+				   f.nm_funcionario nome,
+				   um.fl_ativo ativo,
+				   um.cd_funcionario
+			from tb_usuario_mobile um 
+			inner join rh.tb_funcionario f on f.ci_funcionario = um.cd_funcionario
+      inner join notification_group_has_usuario ngu ON ngu.ci_usuario_mobile = um.ci_usuario_mobile
+      inner join tb_mobile_notification_group ng On  ngu.ci_mobile_notification_group = NG.CI_MOBILE_NOTIFICATION_GROUP
+      WHERE NG.CI_MOBILE_NOTIFICATION_GROUP = #{idGroup}
+			
+	</select>
+	
+	<select id="getUsersByGroups"
+			parameterType="Map"
+			resultType="br.com.aio.security.entity.Usuario">
+			 select um.ci_usuario_mobile id,
+		       f.nr_cpf cpf,
+				   um.ds_email login,
+				   f.nm_funcionario nome,
+				   um.fl_ativo ativo,
+				   um.cd_funcionario
+			from tb_usuario_mobile um 
+			inner join rh.tb_funcionario f on f.ci_funcionario = um.cd_funcionario
+      inner join notification_group_has_usuario ngu ON ngu.ci_usuario_mobile = um.ci_usuario_mobile
+      inner join tb_mobile_notification_group ng On  ngu.ci_mobile_notification_group = NG.CI_MOBILE_NOTIFICATION_GROUP
+      WHERE 1=1
+         <if test="ids != null">
+      		and NG.CI_MOBILE_NOTIFICATION_GROUP in
+      		  <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+        			#{id}
+  			 </foreach> 
+      	</if>
+      	<if test="idsNot != null">
+    	    and um.ci_usuario_mobile not in
+    	      <foreach item="id" index="index" collection="idsNot" open="(" separator="," close=")">
+        		 #{id}
+  			 </foreach>  
+    	 </if>
+			
+	</select>
+	
+		<select id="userAlreadyHadThisMessage"
+			parameterType="Map"
+			resultType="boolean">
+			<![CDATA[
+			 select case
+               when contagem < 1 then
+                0
+               else
+                1
+             end as contagem
+		        from (select count(um.ci_usuario_mobile) contagem
+		                from tb_usuario_mobile um
+		                left join tb_usuario_mobile_message umm
+		                  on um.ci_usuario_mobile = umm.cd_usuario_mobile
+		               where 1 = 1
+		                 and um.ds_email = 'teste@gmail.com'
+		                 and umm.cd_mobile_message = 56)
+			
+			]]>
+	</select>
+	
+	
+	<select id="userAlreadyHadThisApiKey"
+			parameterType="Map"
+			resultType="boolean">
+			<![CDATA[
+			select 
+				case
+					when contagem < 1 then 0
+					else 1
+				end as contagem
+			from(
+				select count(apk.ds_hash) contagem 
+				from tb_api_key apk
+        		inner join tb_usuario_mobile_api_key uapk on uapk.cd_api_key = apk.ci_api_key
+				where apk.ds_hash = #{apiKey}
+				and uapk.cd_usuario_mobile = #{idUser}
+			)
+			]]>
+	</select>
+	
+	<select id="getUsersByApiKey"
+			parameterType="Long"
+			resultType="br.com.aio.security.entity.Usuario">
+			select 
+				u.ci_usuario_mobile id,
+				f.nr_cpf cpf,
+				u.ds_email login,
+				u.ds_senha senha
+			from tb_usuario_mobile u
+			inner join tb_usuario_mobile_api_key uapk on uapk.cd_usuario_mobile = u.ci_usuario_mobile
+      		inner join rh.tb_funcionario f on f.ci_funcionario = u.cd_funcionario
+			where uapk.cd_api_key = #{value}
+	</select>
+	
+	<select id="getUserByCpf" 
+		parameterType="String"
+		resultType="br.com.aio.security.entity.Usuario">
+		select
+			  um.ci_usuario_mobile id,
+			  um.ds_email login,
+			  um.fl_ativo ativo
+		from tb_usuario_mobile um 
+		where um.nr_cpf = #{value}
+	</select>
+	
+	<select id="getUserByCodigoConvite" 
+		parameterType="String"
+		resultType="br.com.aio.security.entity.Usuario">
+		select
+			  um.ci_usuario_mobile id,
+			  um.ds_email login,
+			  um.fl_ativo ativo,
+			  um.nr_codigo_convite codigoConvite
+		from tb_usuario_mobile um 
+		where um.nr_codigo_convite = #{value}
+	</select>
+	
+	
+	<select id="getUserByKey" parameterType="String" resultType="br.com.aio.security.entity.Usuario">
+		select
+			  um.ci_usuario_mobile id,
+			  f.nr_cpf cpf,
+			  um.ds_email login,
+			  um.fl_ativo ativo,
+        f.ci_funcionario "funcionario.id"
+		from tb_usuario_mobile um 
+	    inner join rh.tb_funcionario f on f.ci_funcionario = um.cd_funcionario
+	    inner join tb_usuario_mobile_aux uaux on uaux.cd_usuario_mobile = um.ci_usuario_mobile
+	    where uaux.ds_chave = #{value}
+	    	  and uaux.fl_ativo = 1
+	       	  and TO_DATE(sysdate, 'yyyy/mm/dd') between TO_DATE(uaux.dt_cadastro, 'yyyy/mm/dd') and TO_DATE((uaux.dt_cadastro+3), 'yyyy/mm/dd')
+	</select>
+	
+	<select id="getValuesByUserHelper" parameterType="Long" resultType="Map">
+		select uaux.ds_email, uaux.ds_senha from tb_usuario_mobile_aux uaux
+			where uaux.cd_usuario_mobile = #{value}
+				and uaux.fl_ativo = 1
+	        	and TO_DATE(sysdate, 'yyyy/mm/dd') between TO_DATE(uaux.dt_cadastro, 'yyyy/mm/dd') and TO_DATE((uaux.dt_cadastro+3), 'yyyy/mm/dd')
+	</select>
+	
+	<update id="setInvalidUserHelper"  parameterType="Long">
+		update  tb_usuario_mobile_aux aux
+			set aux.fl_ativo = 0
+			where aux.fl_ativo = 1
+	        and TO_DATE(sysdate, 'yyyy/mm/dd') between TO_DATE(aux.dt_cadastro, 'yyyy/mm/dd') and TO_DATE((aux.dt_cadastro+3), 'yyyy/mm/dd')
+			and aux.cd_usuario_mobile = #{value}
+	</update>
+	
+	<update id="updateUserAux"  parameterType="Map">
+		update tb_usuario_mobile_aux
+			set ds_email = #{login}, ds_senha = #{senha}, ds_chave = #{chave}, fl_ativo = 1, DT_CADASTRO = now()
+			where CD_USUARIO_MOBILE = #{idUsuario}
+	</update>
+		
+	<insert id="insertUserAux"  parameterType="Map">
+		insert into tb_usuario_mobile_aux
+				(ci_usuario_mobile_aux, cd_usuario_mobile, ds_email, ds_senha, ds_chave, fl_ativo, dt_cadastro)
+				values(nextval('seq_tb_usuario_mobile_aux'), #{idUsuario}, #{login}, #{senha}, #{chave}, 1, now())
+	</insert>
+	
+	<update id="updateLenghtUser"  parameterType="Map">
+		update tb_usuario_mobile 
+			 set update_lenght = #{update_lenght}
+			 where CI_USUARIO_MOBILE = #{idUsuario} 
+	</update>
+	
+	<select id="getLenghtUpdateUser" parameterType="Map" resultType="BigDecimal">
+		 select u.UPDATE_LENGHT from tb_usuario_mobile u 
+			 where u.CI_USUARIO_MOBILE = #{idUsuario}
+	</select>
+	
+	<update id="disableUser"  parameterType="Map">
+		update tb_usuario_mobile 
+			set fl_ativo = #{ativo}
+			where CI_USUARIO_MOBILE = #{idUsuario}
+	</update>
+	
+	<update id="updateUser"  parameterType="Map">
+		update tb_usuario_mobile 
+			set ds_email = #{login},
+			 ds_senha = #{senha},
+			 update_lenght = 0
+			where CI_USUARIO_MOBILE = #{idUsuario}
+	</update>
+	
+	
+	<delete id="logout"  parameterType="Map">
+		{call
+			declare
+			begin
+				delete from oauth_access_token t 
+		  			where t.user_name = #{login};
+		  	end		
+		}
+	</delete>
+		
+</mapper>

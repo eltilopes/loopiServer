@@ -25,6 +25,9 @@ public class Categoria {
 
 	@Column(name = "ds_categoria")
 	private String descricao;
+
+	@Column(name = "ds_url_imagem")
+	private String urlImagem;
 	
 	public Long getId() {
 		return id;
@@ -40,6 +43,14 @@ public class Categoria {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public String getUrlImagem() {
+		return urlImagem;
+	}
+
+	public void setUrlImagem(String urlImagem) {
+		this.urlImagem = urlImagem;
 	}
 
 	@Override

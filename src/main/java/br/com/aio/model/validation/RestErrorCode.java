@@ -5,17 +5,17 @@ import org.springframework.http.HttpStatus;
 public enum RestErrorCode {
 	
 	GET,
-	USER_EXISTS(10, "Usuário Existente"),
-	COULD_NOT_AUTHENTICATE(11, "Usuário Existente"),
-	CPF_USED(12, "CPF já usado"),
-	FIELD_ERROR(20, "Um ou mais campos são inválidos"),
+	USER_EXISTS(10, "Usuï¿½rio Existente"),
+	COULD_NOT_AUTHENTICATE(11, "Usuï¿½rio Existente"),
+	CPF_USED(12, "CPF jï¿½ usado"),
+	FIELD_ERROR(20, "Um ou mais campos sï¿½o invï¿½lidos"),
 	
-	NOT_AUTHORIZED(41, "Usuário não autenticado"),
-	LOGIN_FAILURE(42, "Credenciais Inválidas"),
+	NOT_AUTHORIZED(41, "Usuï¿½rio nao autenticado"),
+	LOGIN_FAILURE(42, "Credenciais Invï¿½lidas"),
 	ACCESS_DENIED(43, "Acesso negado"),
-	NOT_FOUND(44, "Recurso não encontrado"),
-	WRONG_TYPE(45, "Campo ou parâmetro com formato inválido"),
-    METHOD_NOT_ALLOWED(46, "Método http não suportado"),
+	NOT_FOUND(44, "Recurso nï¿½o encontrado"),
+	WRONG_TYPE(45, "Campo ou parï¿½metro com formato invï¿½lido"),
+    METHOD_NOT_ALLOWED(46, "Mï¿½todo http nï¿½o suportado"),
     CLIENT_REGISTRATION(47, "Cliente inexistente"),
 	
 	INTERNAL_ERROR(50, "Ocorreu um erro interno no servidor"),

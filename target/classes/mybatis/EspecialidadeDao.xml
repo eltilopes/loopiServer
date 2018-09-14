@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.aio.model.repository.dao.EspecialidadeDao">
+
+	<resultMap type="br.com.aio.model.entity.Especialidade" id="resultEspecialidade">
+		<id property="id" column="ci_especialidade"/>
+		<result property="descricao" column="ds_especialidade" />
+		<association property="subCategoria" javaType="br.com.aio.model.entity.SubCategoria">
+			<id property="id" column="ci_sub_categoria"/>
+			<result property="descricao" column="ds_sub_categoria" />
+		</association>
+	</resultMap>		
+			
+			
+	<select id="getEspecialidades"
+			resultMap="resultEspecialidade">
+			
+			SELECT 
+				e.ci_especialidade , 
+				e.ds_especialidade ,
+				sc.ci_sub_categoria , 
+				sc.ds_sub_categoria 
+  			FROM tb_especialidade e
+  			INNER JOIN tb_sub_categoria	sc on sc.ci_sub_categoria = e.cd_sub_categoria				
+	</select>
+	
+	
+</mapper>

@@ -31,6 +31,7 @@ public class ServicoCardVo {
 	private Boolean favorito;
 	private Double latitude;
 	private Double longitude;
+	private String duracao;
 	private List<ServicoProfissional> servicos;
 
 	public ServicoCardVo(Profissional profissional) {
@@ -164,6 +165,14 @@ public class ServicoCardVo {
 
 	public void setServicos(List<ServicoProfissional> servicos) {
 		this.servicos = servicos;
+	}
+
+	public String getDuracao() {
+		return duracao;
+	}
+
+	public void setDuracao(String duracao) {
+		this.duracao = duracao;
 	}
 
 }

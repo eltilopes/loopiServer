@@ -9,7 +9,8 @@
 			
 			SELECT 
 				ci_categoria id, 
-				ds_categoria descricao
+				ds_categoria descricao,
+				ds_url_imagem urlImagem
   			FROM tb_categoria					
 	</select>
 </mapper>

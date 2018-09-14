@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+				http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/security 
+                http://www.springframework.org/schema/security/spring-security.xsd
+                http://www.springframework.org/schema/security/oauth2 
+                http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
+	
+	<security:http pattern="/convite/solicitar" security="none"  />
+
+	<security:http pattern="/oauth/token" create-session="stateless" 
+        authentication-manager-ref="authenticationManager" >
+        <security:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
+		<security:logout logout-url="/logout" delete-cookies="JSESSIONID" />
+        <security:anonymous enabled="false" />
+        <security:http-basic entry-point-ref="clientAuthenticationEntryPoint" />
+        <security:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
+        <security:access-denied-handler ref="oauthAccessDeniedHandler" /> 
+    </security:http>
+ 
+    <security:http pattern="/**" create-session="ifRequired" 
+        entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true" >
+        <security:anonymous enabled="true" />
+        <security:intercept-url pattern="/running" access="permitAll"/>
+        <security:intercept-url pattern="/lamperougue" access="hasRole('lamperougue')"/>
+        <security:intercept-url pattern="/testelogin" access="permitAll"/>
+        <security:intercept-url pattern="/documento/**" access="hasRole('documento_read')" />
+        <security:intercept-url pattern="/chamado/buscar/**" access="hasRole('chamado_read')" />
+        <security:intercept-url pattern="/chamado/listar/**" access="hasRole('chamado_read')" />
+        <security:intercept-url pattern="/chamado/novo" access="hasRole('chamado_create')" />
+        <security:intercept-url pattern="/usuario/buscar/**" access="hasRole('usuario_read')"/>
+        <security:intercept-url pattern="/usuario/novo" access="permitAll"/>
+        <security:intercept-url pattern="/grupo/listar" access="permitAll"/>
+        <security:intercept-url pattern="/mobile/version" access="permitAll"/>
+        
+        <security:intercept-url pattern="/usuario/editar" access="hasRole('usuario_update')"/>
+        <security:intercept-url pattern="/usuario/roles/**" access="hasRole('usuario_read')"/>
+        <security:intercept-url pattern="/usuario/apikey" access="hasRole('usuario_apikey')"/>
+        
+
+        <!-- 
+        	<security:intercept-url pattern="/mensagem/novo" access="hasRole('mensagem_create')" />
+        -->
+        <security:intercept-url pattern="/email/error" access="hasRole('send_email_create')" />
+        
+        <security:intercept-url pattern="/servico/novo" access="permitAll"/>
+        <security:intercept-url pattern="/servico/listar" access="permitAll" />
+        <security:intercept-url pattern="/profissional/novo" access="permitAll"/>
+        <security:intercept-url pattern="/categoria/listar" access="permitAll" />
+        <security:intercept-url pattern="/subcategoria/listar" access="permitAll" />
+        <security:intercept-url pattern="/especialidade/listar" access="permitAll" />
+        
+        <security:intercept-url pattern="/mensagem/list/**" access="hasRole('mensagem_read')" />
+        <security:intercept-url pattern="/mensagem/recebido/**" access="hasRole('mensagem_read')" />
+        <security:intercept-url pattern="/mensagem/lido/**" access="hasRole('mensagem_read')" />
+        <security:intercept-url pattern="/rh/lotacao/servidor/**" access="hasRole('lotacao_read')" />
+        <security:intercept-url pattern="/rh/frequencia/**" access="hasRole('frequencia_read')" />
+        <security:intercept-url pattern="/rh/licenca/servidor/**" access="hasRole('licenca_read')" />
+       
+        <security:intercept-url pattern="/rh/reposicao/**" access="hasRole('frequencia_read')" />
+        <security:intercept-url pattern="/rh/contracheque/**" access="hasRole('contra_cheque_read')" />
+        
+        <security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <security:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </security:http>
+    
+	
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider user-service-ref="clientDetailsUserService" />
+    </security:authentication-manager>
+    
+    <security:authentication-manager id="userAuthenticationManager">
+        <security:authentication-provider ref="restAuthenticationProvider" />
+    </security:authentication-manager>
+    
+    <!--<bean id="responseExceptionTranslator" class="br.com.aio.security.oauth.RestWebResponseExceptionTranslator" />-->
+    <bean id="responseExceptionTranslator" class="org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator" />
+    
+    <bean id="exceptionRenderer" class="br.com.aio.security.oauth.RestOAuth2ExceptionRenderer" />
+    <!--<bean id="exceptionRenderer" class="org.springframework.security.oauth2.provider.error.DefaultOAuth2ExceptionRenderer" />-->
+	
+	<bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+		<property name="exceptionRenderer" ref="exceptionRenderer"/>
+		<!-- <property name="exceptionTranslator" ref="responseExceptionTranslator"/> -->
+    </bean>
+ 
+    <bean id="clientAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+        <property name="realmName" value="servicoapi/cliente" />
+        <property name="typeName" value="Basic" />
+        <property name="exceptionRenderer" ref="exceptionRenderer"/>
+        <!-- <property name="exceptionTranslator" ref="responseExceptionTranslator"/> -->
+    </bean>
+    
+    <bean id="oauthAccessDeniedHandler" class="br.com.aio.security.oauth.CustomOAuth2AccessDeniedHandler">
+    	<!--<property name="exceptionTranslator" ref="responseExceptionTranslator"/>-->
+    </bean>
+    
+    <!-- 
+    <bean id="tokenEndpoint" class="org.springframework.security.oauth2.provider.endpoint.TokenEndpoint">
+    	<property name="providerExceptionHandler" ref="responseExceptionTranslator" />
+    	<property name="tokenGranter" ref="granter" />
+    	<property name="clientDetailsService" ref="clientDetails"/>
+    </bean>
+    -->
+    
+    <bean id="granter" class="org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter">
+		<constructor-arg ref="tokens" />
+		<constructor-arg>
+			<bean class="org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices" />
+		</constructor-arg>
+		<constructor-arg ref="clientDetails" />
+		<constructor-arg ref="factory" />
+	</bean>
+	
+	<bean id="tokens" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+		<property name="tokenStore" ref="tokenStore" />
+	</bean> 
+	
+	<bean id="factory" class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
+		<constructor-arg ref="clientDetails"/>
+	</bean>
+		
+    <!-- custom implementation -->
+	<!-- 
+	
+	<bean id="oauthAuthenticationEntryPoint" class="br.com.aio.security.config.RestAuthenticationEntryPoint" />
+ 
+    <bean id="clientAuthenticationEntryPoint"
+        class="br.com.aio.security.config.RestAuthenticationEntryPoint">
+        <property name="realmName" value="servicoapi/cliente" />
+        <property name="typeName" value="Basic" />
+    </bean>
+    
+    <bean id="oauthAccessDeniedHandler" class="br.com.aio.security.oauth.CustomOAuth2AccessDeniedHandler" />
+     -->
+ 	
+    <bean id="clientCredentialsTokenEndpointFilter"
+        class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="authenticationEntryPoint" ref="oauthAuthenticationEntryPoint" />
+    </bean>
+ 
+    <bean id="clientDetailsUserService"
+        class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <constructor-arg ref="clientDetails" />
+    </bean>
+ 
+    <bean id="restAuthenticationProvider" class="br.com.aio.security.authentication.RestAuthenticationProvider" />
+ 
+    <oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices">
+        <oauth:authorization-code />
+        <oauth:implicit/>
+        <oauth:refresh-token/>
+        <oauth:client-credentials />
+        <oauth:password authentication-manager-ref="userAuthenticationManager"/>
+    </oauth:authorization-server>
+    
+    <oauth:client-details-service id="clientDetails">
+    	<oauth:client client-id="aio" secret="lamperouge" authorized-grant-types="password, refresh_token, client_credentials"/>
+ 		<oauth:client client-id="smemobile"  secret="lamperouge" authorized-grant-types="password, refresh_token, client_credentials"/>
+ 	</oauth:client-details-service>
+ 
+    <oauth:resource-server id="resourceServerFilter" resource-id="springsec" token-services-ref="tokenServices" />
+    
+    <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
+ 		<constructor-arg ref="dataSource" />
+	</bean>
+ 
+ 	<bean id="tokenEnhancer" class="br.com.aio.security.oauth.CustomTokenEnhancer" />
+ 	
+    <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <property name="tokenStore" ref="tokenStore" />
+        <property name="supportRefreshToken" value="true" />
+        <property name="accessTokenValiditySeconds" value="86400"></property>
+        <property name="clientDetailsService" ref="clientDetails" />
+        <property name="tokenEnhancer" ref="tokenEnhancer"/>
+    </bean>
+</beans>

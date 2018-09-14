@@ -39,6 +39,8 @@ public class ServicoProfissional{
 	@Column(name = "nr_valor",nullable = false)
 	private Double valor;
 	
+	private Boolean selecionado;
+	
 	@ManyToOne
 	@JoinColumn(name = "cd_especialidade")
 	private Especialidade especialidade ;
@@ -46,6 +48,15 @@ public class ServicoProfissional{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cd_profissional")
 	private Profissional profissional;
+
+	
+	public Boolean getSelecionado() {
+		return selecionado;
+	}
+
+	public void setSelecionado(Boolean selecionado) {
+		this.selecionado = selecionado;
+	}
 
 	public Long getId() {
 		return id;
