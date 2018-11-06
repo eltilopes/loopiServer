@@ -34,7 +34,8 @@ public class ConviteService {
 	private String codigoConvite;
 
 	@Transactional
-	public Convite solicitarConvite(Convite convite) {
+	public Usuario solicitarConvite(Convite convite) {
+		Usuario usuario = new Usuario();
 		try {
 			// TODO: handle exception
 			if (conviteExiste(convite)) {
@@ -45,24 +46,32 @@ public class ConviteService {
 			//getNovaChave();
 			convite.setUsuarioCashBack(getUsuarioCashBack(convite));
 			repository.save(convite);
-			enviarEmailConvite(convite.getEmail(), convite.getId());
+			usuario = new Usuario(convite);
+			String senha = usuario.getSenhaPlana();
+			usuario = usuarioService.saveUser(usuario);
+			//usuario.setCodigoConvite(senha);
+			if (!usuario.getCpf().isEmpty()) {
+				enviarEmailConvite(senha,convite.getEmail(), convite.getId());
+			}
 			
 		} catch (BusinessException e) {
 			throw new BusinessException(e.getMessage());
 		} catch (Exception e) {
 			throw new BusinessException(ExceptionMessages.INTERNAL_SERVER_ERROR);
 		}
-		return convite;
+		return usuario;
 	}
 	
-	private void enviarEmailConvite(String emailAddress, Long idConvite) throws Exception {
+	private void enviarEmailConvite( String senha,String emailAddress, Long idConvite) throws Exception {
 		String text = new StringBuilder()
-				.append("Você esta recebendo seu convite, clique no link abaixo para finalizar seu cadastro, se caso você não solicitou isto, por favor desconsidere este email.<br />")
+				.append("Vocï¿½ esta recebendo seu convite, clique no link abaixo para finalizar seu cadastro, se caso vocï¿½ nï¿½o solicitou isto, por favor desconsidere este email.<br />")
 				.append("<a href=\"https://p538r.app.goo.gl/?link=http://aio.com.br/meu_perfil/id_convite:").append(idConvite)
 				.append("&apn=br.com.aio&afl=http://aio.com.br/meu_perfil")
-				.append("\"> Finalizar Cadastro </a>").toString();
+				.append("\"> Finalizar Cadastro </a><br />")
+				.append("Sua senha: ").append(senha).append("<br />").toString();
 		String subject = "AIO - Convite";
 		mailManager.sendMail(new Mail("eltilopes@gmail.com", emailAddress, subject, text));
+		System.out.println(emailAddress);
 	}
 
 	private Usuario getUsuarioCashBack(Convite convite) {
@@ -93,6 +102,7 @@ public class ConviteService {
 		UUID uuid = UUID.randomUUID();
 		codigoConvite = uuid.toString();
 		codigoConvite = codigoConvite.replace("-", "").toUpperCase().substring(0,8);
+		System.out.println(codigoConvite);
 		jaExisteCodigoConvite();
 	}
 

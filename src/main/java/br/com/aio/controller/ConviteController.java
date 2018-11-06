@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.aio.exception.BusinessException;
 import br.com.aio.model.entity.Convite;
 import br.com.aio.model.service.ConviteService;
+import br.com.aio.security.entity.Usuario;
 
 @RestController
 @RequestMapping("/convite")
@@ -23,10 +24,10 @@ public class ConviteController {
 	private ConviteService conviteService;
 	
 	@RequestMapping(value = "/solicitar", method = POST)
-	public ResponseEntity<Convite> solicitarConvite(@Valid @RequestBody Convite convite){
+	public ResponseEntity<Usuario> solicitarConvite(@Valid @RequestBody Convite convite){
 		try {
-			conviteService.solicitarConvite(convite);
-			return new ResponseEntity<Convite>(convite, HttpStatus.CREATED);
+			Usuario usuario = conviteService.solicitarConvite(convite);
+			return new ResponseEntity<Usuario>(usuario, HttpStatus.CREATED);
 		} catch (BusinessException e) {
 			throw new BusinessException(e.getMessage());
 		} 

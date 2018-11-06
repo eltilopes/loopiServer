@@ -42,6 +42,7 @@ public class RestValidationErrorHandler {
 		else if(ex instanceof MethodArgumentNotValidException){
 			result = ((MethodArgumentNotValidException) ex).getBindingResult();
 		}
+		System.out.println(ex.getMessage());
         return new ResponseEntity<RestErrorWrapper>(getErrors(result), HttpStatus.BAD_REQUEST);
     }
 	

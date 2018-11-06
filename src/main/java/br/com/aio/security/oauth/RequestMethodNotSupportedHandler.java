@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.error.DefaultOAuth2ExceptionRenderer;
@@ -21,7 +22,8 @@ import br.com.aio.util.ExceptionMessages;
 public class RequestMethodNotSupportedHandler {
 	
 	private OAuth2ExceptionRenderer exceptionRenderer = new DefaultOAuth2ExceptionRenderer();
-
+	private static final Logger logger = Logger.getLogger(RequestMethodNotSupportedHandler.class);
+	
 	public void handle(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException,
 			ServletException {
@@ -35,6 +37,8 @@ public class RequestMethodNotSupportedHandler {
 			ResponseEntity<RestErrorWrapper> result = new ResponseEntity<RestErrorWrapper>(errorWrapper, HttpStatus.METHOD_NOT_ALLOWED);
 			exceptionRenderer.handleHttpEntityResponse(result, new ServletWebRequest(request, response));
 		} catch (Exception e) {
+
+			logger.error(e.toString());
 			throw new RuntimeException(ExceptionMessages.INTERNAL_SERVER_ERROR);
 		}
 	}

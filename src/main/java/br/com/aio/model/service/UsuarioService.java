@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -14,6 +15,7 @@ import br.com.aio.exception.CpfAlreadyExistsException;
 import br.com.aio.exception.UserAlreadyExistsException;
 import br.com.aio.exception.UserNotFoundException;
 import br.com.aio.model.entity.ApiKey;
+import br.com.aio.model.entity.Convite;
 import br.com.aio.model.entity.Mail;
 import br.com.aio.model.repository.dao.UsuarioDao;
 import br.com.aio.model.repository.hibernate.UsuarioRepository;
@@ -92,6 +94,32 @@ public class UsuarioService {
 		return usuario;
 	}
 
+	public Usuario saveUser(Convite convite ) {
+
+		Usuario usuario = new Usuario(convite);
+		try {
+			// TODO: handle exception
+			if (userExists(usuario)) {
+				throw new UserAlreadyExistsException(ExceptionMessages.USER_EXISTS);
+			}
+			
+			Usuario user = getUserByCpf(usuario.getCpf());
+			
+			if (Objects.nonNull(user)) {
+				throw new CpfAlreadyExistsException(ExceptionMessages.CPF_USED, user);
+			}
+			
+			usuario.setRoles(roleService.getRolesByCPF(usuario.getCpf()));
+			repository.save(usuario);
+			
+			
+		} catch (Exception e) {
+			usuario = new Usuario();
+			e.printStackTrace();
+		}
+		return usuario;
+	}
+
 	public Usuario getUserByCpf(String cpf) {
 		return usuarioDao.getUserByCpf(cpf);
 	}
@@ -129,7 +157,7 @@ public class UsuarioService {
 		BigDecimal lenght = usuarioDao.getLenghtUpdateUser(user);
 		if (lenght.compareTo(new BigDecimal(2)) == 1) {
 			usuarioDao.disableUser(user);
-			throw new BusinessException("Usuário Bloqueado");
+			throw new BusinessException("Usuï¿½rio Bloqueado");
 		} else {
 			user.setUpdateLenght(lenght.intValue());
 			usuarioDao.updateLenghtUser(user);
@@ -159,9 +187,10 @@ public class UsuarioService {
 //		return response.getBody().toString();
 //	}
 
+	
 	private void sendMailChangeUser(String emailAddress, String uuid) throws Exception {
 		String text = new StringBuilder()
-				.append("Você fez o recadastro no SME Mobile, clique no link abaixo para confirmar, se caso você não solicitou isto, por favor desconsidere este email.<br />")
+				.append("Vocï¿½ fez o recadastro no SME Mobile, clique no link abaixo para confirmar, se caso vocï¿½ nï¿½o solicitou isto, por favor desconsidere este email.<br />")
 				//.append("<a href=\"http://api.sme.fortaleza.ce.gov.br/aio/pergunta/?key=").append(uuid)
 				.append("<a href=\"http://172.23.7.125:8080/aio/pergunta/?key=").append(uuid)
 				.append("\"> Confirmar Recadastro </a>").toString();
@@ -172,12 +201,12 @@ public class UsuarioService {
 
 	private void sendMailChangePassword(String emailAddress, String uuid) throws Exception {
 		String text = new StringBuilder()
-				.append("Você solicitou a alteração de senha no AIO Mobile, clique no link abaixo para confirmar, se caso você não solicitou isto, por favor desconsidere este email.<br />")
+				.append("Vocï¿½ solicitou a alteraï¿½ï¿½o de senha no AIO Mobile, clique no link abaixo para confirmar, se caso vocï¿½ nï¿½o solicitou isto, por favor desconsidere este email.<br />")
 				.append("<a href=\"https://p538r.app.goo.gl/?link=http://aio.com.br/meu_perfil/chave:").append(uuid)
 				.append("&apn=br.com.aio&afl=http://aio.com.br/meu_perfil")
-				.append("\"> Confirmar Alteração de Senha </a>")
+				.append("\"> Confirmar Alteraï¿½ï¿½o de Senha </a>")
 				.append("<br>").append("Chave: ").append(uuid).toString();
-		String subject = "AIO Mobile - Alteração de Senha";
+		String subject = "AIO Mobile - Alteraï¿½ï¿½o de Senha";
 
 		sendMail(emailAddress, subject, text);
 	}
@@ -197,7 +226,8 @@ public class UsuarioService {
 
 	public boolean userExists(Usuario usuario) {
 		Objects.requireNonNull(usuario.getLogin());
-		return (usuarioDao.getUser(usuario.getLogin()) != null);
+		Objects.requireNonNull(usuario.getCpf());
+		return (usuarioDao.getUser(usuario.getLogin()) != null) && (usuarioDao.getUserByCpf(usuario.getCpf()) != null);
 	}
 
 	private Usuario addUserDependencies(Usuario user) {

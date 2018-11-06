@@ -35,6 +35,7 @@ public class UnauthorizedHandler{
 			ResponseEntity<RestErrorWrapper> result = new ResponseEntity<RestErrorWrapper>(errorWrapper, HttpStatus.UNAUTHORIZED);
 			exceptionRenderer.handleHttpEntityResponse(result, new ServletWebRequest(request, response));
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			throw new RuntimeException(ExceptionMessages.INTERNAL_SERVER_ERROR);
 		}
 	}

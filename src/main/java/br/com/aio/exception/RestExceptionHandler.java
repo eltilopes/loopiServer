@@ -32,6 +32,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.NOT_FOUND.getValue())
 			.message(RestErrorCode.NOT_FOUND.getErrorMessage())
 			.build();
+		logger.error(ex.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.NOT_FOUND);
 	}
 	
@@ -72,6 +73,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.USER_EXISTS.getValue())
 			.message(RestErrorCode.USER_EXISTS.getErrorMessage())
 			.build();
+		logger.error(ex.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.CONFLICT);
 	}
 	
@@ -82,6 +84,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.LOGIN_FAILURE.getValue())
 			.message(RestErrorCode.LOGIN_FAILURE.getErrorMessage())
 			.build();
+		logger.error(ex.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.UNAUTHORIZED);
 	}
 	
@@ -92,6 +95,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.LOGIN_FAILURE.getValue())
 			.message(RestErrorCode.LOGIN_FAILURE.getErrorMessage())
 			.build();
+		logger.error(ex.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.UNAUTHORIZED);
 	}
 	
@@ -102,6 +106,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.LOGIN_FAILURE.getValue())
 			.message(RestErrorCode.LOGIN_FAILURE.getErrorMessage())
 			.build();
+		logger.error(ex.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.UNAUTHORIZED);
 	}
 	
@@ -112,6 +117,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.LOGIN_FAILURE.getValue())
 			.message(RestErrorCode.LOGIN_FAILURE.getErrorMessage())
 			.build();
+		logger.error(ex.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.UNAUTHORIZED);
 	}
 	
@@ -122,6 +128,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.BUSSINESS_FAILURE.getValue())
 			.message(ex.getMessage())
 			.build();
+		logger.error(ex.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.BAD_REQUEST);
 	}
 	
@@ -132,6 +139,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.METHOD_NOT_ALLOWED.getValue())
 			.message(RestErrorCode.METHOD_NOT_ALLOWED.getErrorMessage())
 			.build();
+		logger.error(ex.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	
@@ -140,8 +148,9 @@ public class RestExceptionHandler {
 	public ResponseEntity<Object> handleCpfAlreadyExistsException(CpfAlreadyExistsException e){
 		RestErrorWrapper errorWrapper = new RestErrorWrapper()
 			.withCode(RestErrorCode.CPF_USED.getValue())
-			.message("O CFP informado já foi cadastrado com o email " + e.getUser().getLogin())
+			.message("O CFP informado jï¿½ foi cadastrado com o email " + e.getUser().getLogin())
 			.build();
+		logger.error(e.getStackTrace());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.CONFLICT);
 	}
 
@@ -150,6 +159,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.WRONG_TYPE.getValue())
 			.message(RestErrorCode.WRONG_TYPE.getErrorMessage())
 			.build();
+		logger.error(errorWrapper.toString());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.BAD_REQUEST);
 	}
 	
@@ -158,6 +168,7 @@ public class RestExceptionHandler {
 			.withCode(RestErrorCode.NOT_FOUND.getValue())
 			.message(RestErrorCode.NOT_FOUND.getErrorMessage())
 			.build();
+		logger.error(errorWrapper.toString());
 		return new ResponseEntity<Object>(errorWrapper, HttpStatus.NOT_FOUND);
 	}
 }

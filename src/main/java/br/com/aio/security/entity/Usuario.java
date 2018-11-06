@@ -3,6 +3,7 @@ package br.com.aio.security.entity;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import br.com.aio.model.entity.ApiKey;
+import br.com.aio.model.entity.Convite;
 
 @JsonSerialize
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -61,7 +63,7 @@ public class Usuario implements Serializable{
 	@Column(name = "nr_codigo_convite")
 	private String codigoConvite;
 	
-	@JsonIgnore
+	//@JsonIgnore
 	@NotEmpty
 	@Size(min = 8)
 	@Column(name = "ds_senha")
@@ -84,8 +86,16 @@ public class Usuario implements Serializable{
 	@Transient
 	private List<ApiKey> apiKeys;
 	
-	
+
 	public Usuario() { }
+
+	public Usuario(Convite convite) { 
+		this.codigoConvite = convite.getCodigoConvite();
+		this.nome = convite.getNome();
+		this.login = convite.getEmail();
+		this.cpf = convite.getCpf();
+		setSenha(gerarSenhaAleatoria()); 
+	}
 
 	public Usuario(String login){
 		this.login = login;
@@ -188,6 +198,32 @@ public class Usuario implements Serializable{
 		this.codigoConvite = codigoConvite;
 	}
 
+	private String gerarSenhaAleatoria() {
+
+		String senha = "";
+		// Determia as letras que poderão estar presente nas chaves
+		String letras = "ABCDEFGHIJKLMNOPQRSTUVYWXZ";
+		String numeros = "0123456789";
+		String caracteres = "@#$&_";
+
+		Random random = new Random();
+		int indexLetras = -1;
+		int indexNumeros = -1;
+		int indexCaracteres = -1;
+		for( int i = 0; i < 4; i++ ) {
+			   indexLetras = random.nextInt( letras.length() );
+			   senha += letras.substring( indexLetras, indexLetras + 1 ) ;
+		}
+		indexCaracteres = random.nextInt( caracteres.length() );
+		senha +=  caracteres.substring( indexCaracteres, indexCaracteres + 1 );
+		for( int i = 0; i < 4; i++ ) {
+			   indexNumeros = random.nextInt( numeros.length() );
+			   senha +=  numeros.substring( indexNumeros, indexNumeros + 1 ) ;
+		}
+		System.out.println(senha);
+		return senha;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
