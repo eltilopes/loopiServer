@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Strings;
 
+import br.com.aio.model.entity.FavoritoProfissionalUsuario;
 import br.com.aio.model.entity.Profissional;
 import br.com.aio.model.entity.ServicoProfissional;
 import br.com.aio.model.entity.vo.FiltroVo;
@@ -40,6 +41,15 @@ public class ProfissionalRepository{
 	public void save(Profissional profissional ) {
 		getSession().save(profissional);
 	}
+	
+	public void saveFavoritoProfissionalUsuario(FavoritoProfissionalUsuario favoritoProfissionalUsuario ) {
+		getSession().save(favoritoProfissionalUsuario);
+	}
+	
+	public void deleteFavoritoProfissionalUsuario(FavoritoProfissionalUsuario favoritoProfissionalUsuario ) {
+		getSession().delete(favoritoProfissionalUsuario);
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	public List<Profissional> getProfissionais(FiltroVo filtro){
@@ -53,7 +63,7 @@ public class ProfissionalRepository{
 		filtrarPesquisaToolbar(filtro, crit);
 		ordenarValorNomeProfissional(filtro, crit);
         List<Profissional> profissionais = (List<Profissional>) crit.list();   
-        System.out.println("Total Serviços : " + profissionais.size());
+        System.out.println("Total Serviï¿½os : " + profissionais.size());
         return profissionais;
 	}
 	
@@ -63,7 +73,7 @@ public class ProfissionalRepository{
         crit = crit.createAlias("servico.profissional", "profissional");
         crit.add(Restrictions.eq("profissional.id", profissional.getId()));
         List<ServicoProfissional> servicos = (List<ServicoProfissional>) crit.list();   
-        System.out.println("Total Serviços : " + servicos.size());
+        System.out.println("Total Serviï¿½os : " + servicos.size());
         return servicos;
 	}
 

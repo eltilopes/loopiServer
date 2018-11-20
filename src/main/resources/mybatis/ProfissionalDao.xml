@@ -9,6 +9,8 @@
 	<resultMap type="br.com.aio.model.entity.Profissional" id="resultProfissional">
 		<id property="id" column="ci_profissional"/>
 		<result property="urlImagem" column="ds_url_imagem" />
+		<result property="favoritos" column="nr_favoritos"/>
+		<result property="favorito" column="fl_favorito"/>
 		<association property="usuario" javaType="br.com.aio.security.entity.Usuario">
 			<id property="id" column="ci_usuario_mobile"/>
 			<result property="nome" column="ds_nome" />
@@ -63,16 +65,22 @@
 		  sc.ci_sub_categoria, 
 		  sc.ds_sub_categoria, 
 		  c.ci_categoria, 
-		  c.ds_categoria
+		  c.ds_categoria,
+		  count(pfu.ci_profissional_favorito_usuario) nr_favoritos,
+		  (select true from tb_profissional_favorito_usuario pf 
+			where pf.cd_usuario_mobile = ${idUsuario} 
+			and pf.cd_profissional = p.ci_profissional) fl_favorito
 		FROM 
 		  tb_profissional p
 		INNER JOIN tb_localizacao l ON l.ci_localizacao = p.cd_localizacao
 		INNER JOIN tb_servico_profissional sp ON sp.cd_profissional = p.ci_profissional
+		LEFT JOIN tb_profissional_favorito_usuario pfu ON pfu.cd_profissional = p.ci_profissional AND pfu.fl_favorito = 1
 		INNER JOIN tb_usuario_mobile um ON um.ci_usuario_mobile = p.cd_usuario
 		INNER JOIN tb_especialidade e ON e.ci_especialidade = p.cd_especialidade
 		INNER JOIN tb_sub_categoria sc ON sc.ci_sub_categoria = p.cd_sub_categoria 
 		INNER JOIN tb_categoria c ON c.ci_categoria = p.cd_categoria 
 		WHERE 1 = 1 
+		
 		<if test="pesquisaToolbar != null and pesquisaToolbar != '' ">
 			 AND (um.ds_nome ilike ${pesquisaToolbarLike} OR 
 					 sp.nm_servico_profissional ilike ${pesquisaToolbarLike} OR 
@@ -90,6 +98,25 @@
 		<if test="idEspecialidade != null ">
 			 AND e.ds_especialidade = ${idEspecialidade} 
 		</if>
+		
+		GROUP BY p.ci_profissional, 
+		  p.ds_url_imagem, 
+		  um.ci_usuario_mobile, 
+		  um.ds_nome, 
+		  l.ci_localizacao, 
+		  l.nr_latitude, 
+		  l.nr_longitude, 
+		  sp.ci_servico_profissional, 
+		  sp.nm_servico_profissional, 
+		  sp.ds_servico_profissional, 
+		  sp.nr_tempo, 
+		  sp.nr_valor, 
+		  e.ds_especialidade, 
+		  e.ci_especialidade, 
+		  sc.ci_sub_categoria, 
+		  sc.ds_sub_categoria, 
+		  c.ci_categoria, 
+		  c.ds_categoria
 		
 		ORDER BY sp.ci_servico_profissional DESC
 		<if test="menorValor != null">
@@ -109,4 +136,52 @@
 
 	</select>
 	
+	<resultMap type="br.com.aio.model.entity.FavoritoProfissionalUsuario" id="resultFavorito">
+		<id property="id" column="ci_profissional_favorito_usuario"/>
+		<result property="dataCriacao" column="dt_criacao" />
+		<association property="usuario" javaType="br.com.aio.security.entity.Usuario">
+			<id property="id" column="ci_usuario_mobile_favorito"/>
+			<result property="nome" column="ds_nome_favorito" />
+		</association>
+		<association property="profissional" javaType="br.com.aio.model.entity.Profissional">
+			<id property="id" column="ci_profissional"/>
+			<association property="usuario" javaType="br.com.aio.security.entity.Usuario">
+				<id property="id" column="ci_usuario_mobile_profissional"/>
+				<result property="nome" column="ds_nome_profissional" />
+			</association>
+		</association>
+	</resultMap>		
+			
+			
+	<select id="getFavoritosProfissional"
+			resultMap="resultFavorito"  parameterType="Map">
+			
+			SELECT 
+				 pfu.ci_profissional_favorito_usuario
+				,pfu.dt_criacao
+				,p.ci_profissional
+				,umf.ci_usuario_mobile ci_usuario_mobile_favorito 
+				,umf.ds_nome ds_nome_favorito 
+				,ump.ci_usuario_mobile ci_usuario_mobile_profissional 
+				,ump.ds_nome ds_nome_profissional 
+			FROM tb_profissional_favorito_usuario pfu
+			INNER JOIN tb_profissional p ON pfu.cd_profissional = p.ci_profissional AND pfu.fl_favorito = 1
+			INNER JOIN tb_usuario_mobile umf ON umf.ci_usuario_mobile = pfu.cd_usuario_mobile
+			INNER JOIN tb_usuario_mobile ump ON ump.ci_usuario_mobile = p.cd_usuario	
+			WHERE 1 = 1
+			<if test="idProfissional != null ">
+				 AND pfu.cd_profissional = ${idProfissional} 
+			</if>		
+	</select>
+	
+	<select id="getFavoritoProfissionalUsuario"
+			resultType="br.com.aio.model.entity.FavoritoProfissionalUsuario">
+			
+			SELECT 
+				ci_profissional_favorito_usuario id
+  			FROM tb_profissional_favorito_usuario
+  			WHERE cd_usuario_mobile = #{idUsuario}
+  			AND cd_profissional = #{idProfissional}
+									
+	</select>
 </mapper>

@@ -48,7 +48,6 @@ public class ServicoProfissional{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cd_profissional")
 	private Profissional profissional;
-
 	
 	public Boolean getSelecionado() {
 		return selecionado;

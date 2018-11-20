@@ -51,6 +51,9 @@
         <security:intercept-url pattern="/servico/listar" access="permitAll" />
         <security:intercept-url pattern="/servico/solicitar" access="permitAll" />
         <security:intercept-url pattern="/profissional/novo" access="permitAll"/>
+        <security:intercept-url pattern="/profissional/favoritos" access="permitAll"/>
+        <security:intercept-url pattern="/profissional/favorito" access="permitAll"/>
+        <security:intercept-url pattern="/profissional/desfavoritar" access="permitAll"/>
         <security:intercept-url pattern="/categoria/listar" access="permitAll" />
         <security:intercept-url pattern="/subcategoria/listar" access="permitAll" />
         <security:intercept-url pattern="/especialidade/listar" access="permitAll" />

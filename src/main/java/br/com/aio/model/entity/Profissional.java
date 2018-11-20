@@ -61,6 +61,27 @@ public class Profissional {
 	@JsonIgnore
     private List<ServicoProfissional> servicos;
 
+	private Integer favoritos;
+
+	private Boolean favorito;
+	
+	public Boolean getFavorito() {
+		
+		return favorito == null ? false : favorito ;
+	}
+
+	public void setFavorito(Boolean favorito) {
+		this.favorito = favorito;
+	}
+
+	public Integer getFavoritos() {
+		return favoritos;
+	}
+
+	public void setFavoritos(Integer favoritos) {
+		this.favoritos = favoritos;
+	}
+
 	public Long getId() {
 		return id;
 	}

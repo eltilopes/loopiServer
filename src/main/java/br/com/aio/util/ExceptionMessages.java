@@ -2,28 +2,32 @@ package br.com.aio.util;
 
 public class ExceptionMessages {
 	
-	public static final String UNKNOW_PATH = "Não foi possivel encontrar o caminho do arquivo";
+	public static final String UNKNOW_PATH = "Nï¿½o foi possivel encontrar o caminho do arquivo";
 	
-	public static final String CANNOT_GET_FILE = "Não foi possivel transaferir o arquivo";
+	public static final String CANNOT_GET_FILE = "Nï¿½o foi possivel transaferir o arquivo";
 	
-	public static final String USER_EXISTS = "Este usuário já esta sendo usado, por favor, tente outro";
+	public static final String USER_EXISTS = "Este usuï¿½rio jï¿½ esta sendo usado, por favor, tente outro";
 	
-	public static final String USER_NOT_EXISTS = "O usuário informado não existe";
+	public static final String USER_NOT_EXISTS = "O usuï¿½rio informado nï¿½o existe";
 
-	public static final String BAD_CREDENTIALS = "Credenciais Inválidas";
+	public static final String BAD_CREDENTIALS = "Credenciais Invï¿½lidas";
 	
-	public static final String NOT_EMPLOYEE = "O CPF informado não é de um servidor público";
+	public static final String NOT_EMPLOYEE = "O CPF informado nï¿½o ï¿½ de um servidor pï¿½blico";
 	
-	public static final String CPF_USED = "O CPF informado já está sendo utilizado por um outro usuário";
+	public static final String CPF_USED = "O CPF informado jï¿½ estï¿½ sendo utilizado por um outro usuï¿½rio";
 	
 	public static final String INTERNAL_SERVER_ERROR = "Ocorreu um erro interno no servidor";
 	
-	public static final String ID_REQUIRED = "O ID do usuário não pode ser nulo";
+	public static final String ID_REQUIRED = "O ID do usuï¿½rio nï¿½o pode ser nulo";
 	
-	public static final String WRONG_MAIL = "Não foi possível enviar um email de confirmação para o endereço de email informado";
+	public static final String WRONG_MAIL = "Nï¿½o foi possï¿½vel enviar um email de confirmaï¿½ï¿½o para o endereï¿½o de email informado";
 
 	public static final String TESTE = "teste";
 
-	public static final String CONVITE_EXISTS = "Esse CPF já solicitou convite";
+	public static final String CONVITE_EXISTS = "Esse CPF jï¿½ solicitou convite";
+
+	public static final String FAVORITO_EXISTS = "Esse usuario ja adicionou o profissional ao favorito";
+	
+	public static final String FAVORITO_NOT_EXISTS = "Esse usuario nao tem o profissional como favorito";
 	
 }

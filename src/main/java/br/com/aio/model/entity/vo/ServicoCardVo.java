@@ -29,6 +29,7 @@ public class ServicoCardVo {
 	private Integer tempo;
 	private Integer estrelas;
 	private Boolean favorito;
+	private Integer favoritos;
 	private Double latitude;
 	private Double longitude;
 	private String duracao;
@@ -44,7 +45,8 @@ public class ServicoCardVo {
 		latitude = profissional.getLocalizacao().getLatitude();
 		longitude = profissional.getLocalizacao().getLongitude();
 		estrelas = 3;
-		favorito = true;
+		favorito = profissional.getFavorito() ;
+		favoritos = profissional.getFavoritos();
 		if(!profissional.getServicos().isEmpty() && profissional.getServicos().size()==1){
 			preco = profissional.getServicos().get(0).getValor();
 			tempo = profissional.getServicos().get(0).getTempo();
@@ -173,6 +175,14 @@ public class ServicoCardVo {
 
 	public void setDuracao(String duracao) {
 		this.duracao = duracao;
+	}
+
+	public Integer getFavoritos() {
+		return favoritos;
+	}
+
+	public void setFavoritos(Integer favoritos) {
+		this.favoritos = favoritos;
 	}
 
 }

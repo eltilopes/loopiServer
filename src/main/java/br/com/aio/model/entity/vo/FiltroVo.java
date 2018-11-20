@@ -20,6 +20,7 @@ public class FiltroVo {
     private String pesquisaToolbar;
     private Boolean menorValor;
     private Boolean ordemAlfabeticaCrescente;
+    private Long idUsuario; 
     
 	public Boolean getMenorValor() {
 		return menorValor;
@@ -59,6 +60,12 @@ public class FiltroVo {
 	}
 	public void setPesquisaToolbar(String pesquisaToolbar) {
 		this.pesquisaToolbar = pesquisaToolbar;
+	}
+	public Long getIdUsuario() {
+		return idUsuario;
+	}
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 	
 }

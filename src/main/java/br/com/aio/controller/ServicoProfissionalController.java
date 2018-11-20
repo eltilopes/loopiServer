@@ -22,14 +22,11 @@ import br.com.aio.model.entity.vo.FiltroVo;
 import br.com.aio.model.entity.vo.ServicoCardVo;
 import br.com.aio.model.entity.vo.SolicitarPedidoVo;
 import br.com.aio.model.service.ProfissionalService;
-import br.com.aio.model.service.ServicoProfissionalService;
 
 @RestController
 @RequestMapping("/servico")
 public class ServicoProfissionalController {
 
-	@Inject
-	private ServicoProfissionalService servicoProfissionalService;
 	@Inject
 	private ProfissionalService profissionalService;
 	

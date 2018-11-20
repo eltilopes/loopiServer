@@ -1,18 +1,12 @@
 package br.com.aio.model.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.aio.exception.BusinessException;
-import br.com.aio.model.entity.Profissional;
 import br.com.aio.model.entity.ServicoProfissional;
-import br.com.aio.model.entity.vo.FiltroVo;
-import br.com.aio.model.entity.vo.ServicoCardVo;
 import br.com.aio.model.repository.hibernate.ServicoProfissionalRepository;
 import br.com.aio.util.ExceptionMessages;
 
