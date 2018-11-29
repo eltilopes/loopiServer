@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -38,12 +37,11 @@ public class UsuarioService {
 	@Inject
 	private MailManager mailManager;
 
-    private static final String CLIENT_AIO = "aio";
+    private static final String CLIENT_LOOPI = "appLoopi";
     
 	public UsuarioAuth getUser(String login, String senha, String client) {
-		
 		//TODO: ajustar regra de pegar o usuario que ira logar na app
-		if(CLIENT_AIO.equals(client)){
+		if(CLIENT_LOOPI.equals(client)){
 			return usuarioDao.getUser(login, senha);	
 		}else {
 			UsuarioAuth u = new UsuarioAuth();
@@ -243,6 +241,7 @@ public class UsuarioService {
 		return roleService;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void updateUserByAux(Usuario user, String loginOld, Map questions) {
 		try{
 			//pegava id do funcionario vinculado as questoes

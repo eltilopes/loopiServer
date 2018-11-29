@@ -165,7 +165,7 @@
     
     <oauth:client-details-service id="clientDetails">
     	<oauth:client client-id="aio" secret="lamperouge" authorized-grant-types="password, refresh_token, client_credentials"/>
- 		<oauth:client client-id="smemobile"  secret="lamperouge" authorized-grant-types="password, refresh_token, client_credentials"/>
+ 		<oauth:client client-id="appLoopi"  secret="lamperouge" authorized-grant-types="password, refresh_token, client_credentials"/>
  	</oauth:client-details-service>
  
     <oauth:resource-server id="resourceServerFilter" resource-id="springsec" token-services-ref="tokenServices" />
