@@ -14,17 +14,13 @@ public class UsuarioAuth implements Serializable{
 	private static final long serialVersionUID = 4530645822525741071L;
 
 	private Long id;
-	
 	private String login;
-	
 	private String cpf;
-	
 	private String nome;
-
 	private List<Role> roles;
-	
 	private String senha;
-
+	private String telefone;
+	private String urlImagem;
 	
 	public String getSenha() {
 		return senha;
@@ -32,6 +28,22 @@ public class UsuarioAuth implements Serializable{
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getUrlImagem() {
+		return urlImagem;
+	}
+
+	public void setUrlImagem(String urlImagem) {
+		this.urlImagem = urlImagem;
 	}
 
 	public Long getId() {

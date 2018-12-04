@@ -2,6 +2,7 @@ package br.com.aio.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +24,7 @@ import br.com.aio.exception.BusinessException;
 import br.com.aio.exception.CpfAlreadyExistsException;
 import br.com.aio.exception.UserAlreadyExistsException;
 import br.com.aio.model.entity.ApiKey;
+import br.com.aio.model.entity.Categoria;
 import br.com.aio.model.service.ApiKeyService;
 import br.com.aio.model.service.UsuarioService;
 import br.com.aio.security.entity.Role;
@@ -143,5 +145,13 @@ public class UsuarioController {
 	public ResponseEntity<Usuario> logout(@PathVariable("login") String login){
 		usuarioService.logout(login);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+
+	@RequestMapping(value = "/logout", method = GET)
+	public ResponseEntity<String> usuarioLogout(@RequestParam("cpf") String cpf){
+		Usuario usuario = usuarioService.getUserByCpf(cpf);
+		usuarioService.logout(usuario.getLogin());
+		return new ResponseEntity<String>(cpf, HttpStatus.OK);
 	}
 }

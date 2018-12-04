@@ -35,8 +35,6 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
 		String senha = DigestUtils.md5Hex((String)auth.getCredentials());
 		UsuarioAuth usuario = usuarioService
 				.getUser((String)auth.getPrincipal(), senha, deatils.get("client_id"));
-		System.out.println(DigestUtils.md5Hex("UGFO#3377"));
-		//System.out.println("124bd1296bec0d9d93c7b52a71ad8d5b");
 		
 		if (usuario == null) {
 			throw new BadCredentialsException(ExceptionMessages.BAD_CREDENTIALS);

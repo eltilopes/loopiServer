@@ -178,6 +178,8 @@
 				u.ci_usuario_mobile id,
 				u.ds_nome nome,
 				u.nr_cpf cpf,
+				u.ds_url_imagem urlImagem,
+				u.nr_telefone telefone,
 				u.ds_email login
 			from tb_usuario_mobile u
 			where u.nr_cpf = #{login}
@@ -420,13 +422,10 @@ order by um.ci_usuario_mobile
 	
 	
 	<delete id="logout"  parameterType="Map">
-		{call
-			declare
-			begin
+		
 				delete from oauth_access_token t 
 		  			where t.user_name = #{login};
-		  	end		
-		}
+		
 	</delete>
 		
 </mapper>

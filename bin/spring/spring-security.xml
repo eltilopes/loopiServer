@@ -34,6 +34,7 @@
         <security:intercept-url pattern="/chamado/novo" access="hasRole('chamado_create')" />
         <security:intercept-url pattern="/usuario/buscar/**" access="hasRole('usuario_read')"/>
         <security:intercept-url pattern="/usuario/novo" access="permitAll"/>
+        <security:intercept-url pattern="/usuario/logout" access="permitAll"/>
         <security:intercept-url pattern="/grupo/listar" access="permitAll"/>
         <security:intercept-url pattern="/mobile/version" access="permitAll"/>
         

@@ -63,6 +63,15 @@ public class Usuario implements Serializable{
 	@Column(name = "nr_codigo_convite")
 	private String codigoConvite;
 	
+	@Column(name = "ds_url_imagem")
+	@JsonIgnore
+	private String urlImagem;
+	
+	@NotEmpty
+	@Pattern(regexp = "^[0-9]{11}$", message = "{telefone.message}")
+	@Column(name = "nr_telefone")
+	private String telefone;
+	
 	//@JsonIgnore
 	@NotEmpty
 	@Size(min = 8)
@@ -94,6 +103,8 @@ public class Usuario implements Serializable{
 		this.nome = convite.getNome();
 		this.login = convite.getEmail();
 		this.cpf = convite.getCpf();
+		this.telefone = convite.getTelefone();
+		this.urlImagem = "";
 		setSenha(gerarSenhaAleatoria()); 
 	}
 
@@ -164,6 +175,22 @@ public class Usuario implements Serializable{
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	public String getUrlImagem() {
+		return urlImagem;
+	}
+
+	public void setUrlImagem(String urlImagem) {
+		this.urlImagem = urlImagem;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public String getSenhaPlana() {

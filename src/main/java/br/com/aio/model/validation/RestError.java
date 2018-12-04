@@ -19,6 +19,7 @@ public class RestError {
 	}
 
 	public RestError(String field, String message) {
+		System.out.println("field / " + field + "  --  message / " + message);
 		this.field = field;
 		this.message = message;
 	}
@@ -28,6 +29,7 @@ public class RestError {
 	}
 
 	public void setField(String field) {
+		System.out.println("field / " + field);
 		this.field = field;
 	}
 
@@ -36,6 +38,7 @@ public class RestError {
 	}
 
 	public void setMessage(String message) {
+		System.out.println("message / " + message);
 		this.message = message;
 	}
 

@@ -26,8 +26,7 @@
 
 	<!-- Data Management -->
 
-	
-<!-- 
+
     <bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="username" value="postgres" />
@@ -35,8 +34,8 @@
         <property name="driverClassName" value="org.postgresql.Driver" />
         <property name="url" value="jdbc:postgresql://localhost:5432/all_in_one" />       
         
-    </bean>
-	-->
+    </bean>	
+<!-- 
 	<bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="username" value="postgres" />
@@ -45,6 +44,7 @@
         <property name="url" value="jdbc:postgresql://172.16.101.2:5432/bd_loopi" />       
         
     </bean>
+	-->
     
     <bean id="sessionFactory"
         class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
