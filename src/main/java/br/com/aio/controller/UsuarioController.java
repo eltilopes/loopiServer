@@ -2,7 +2,6 @@ package br.com.aio.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,12 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.aio.exception.BusinessException;
 import br.com.aio.exception.CpfAlreadyExistsException;
 import br.com.aio.exception.UserAlreadyExistsException;
+import br.com.aio.exception.UserNotFoundException;
 import br.com.aio.model.entity.ApiKey;
-import br.com.aio.model.entity.Categoria;
 import br.com.aio.model.service.ApiKeyService;
 import br.com.aio.model.service.UsuarioService;
 import br.com.aio.security.entity.Role;
 import br.com.aio.security.entity.Usuario;
+import br.com.aio.util.ExceptionMessages;
 
 /**
  * 
@@ -65,22 +66,22 @@ public class UsuarioController {
 		}
 	}
 	
-//	@RequestMapping(value = "/editar", method = POST)
-//	public ResponseEntity<String> editUser(@Valid Usuario user){
-//		if(Objects.isNull(user.getId())){
-//			throw new BusinessException(ExceptionMessages.ID_REQUIRED);
-//		}
-//		Usuario userOld = usuarioService.getUserByCpf(user.getCpf());
-//		if(Objects.isNull(userOld)){
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//		try{
-//			usuarioService.updateUser(user, userOld.getLogin());
-//		}catch(UserNotFoundException e){
-//			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//		}
-//		return new ResponseEntity<String>(usuarioService.doLoginAndGetToken(user), HttpStatus.CREATED);
-//	}
+	@RequestMapping(value = "/editar", method = POST)
+	public ResponseEntity<Usuario> editUser(@Valid @RequestBody Usuario user){
+		if(Objects.isNull(user.getId())){
+			throw new BusinessException(ExceptionMessages.ID_REQUIRED);
+		}
+		Usuario userOld = usuarioService.getUserByCpf(user.getCpf());
+		if(Objects.isNull(userOld)){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		try{
+			usuarioService.updateUser(user, userOld.getLogin());
+		}catch(UserNotFoundException e){
+			throw new BusinessException(e.getMessage());
+		}
+		return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
+	}
 	
 	@RequestMapping(value = "/resgatar/senha", method = POST)
 	public ResponseEntity<String> passwordRecover(@RequestParam String senha, @RequestParam String cpf){

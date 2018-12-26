@@ -57,14 +57,15 @@ public class Usuario implements Serializable{
 	@Column(name = "nr_cpf")
 	private String cpf;
 	
+	@NotEmpty
 	@Column(name = "ds_nome")
 	private String nome;
 	
 	@Column(name = "nr_codigo_convite")
 	private String codigoConvite;
 	
+	@NotEmpty
 	@Column(name = "ds_url_imagem")
-	@JsonIgnore
 	private String urlImagem;
 	
 	@NotEmpty
@@ -74,7 +75,7 @@ public class Usuario implements Serializable{
 	
 	//@JsonIgnore
 	@NotEmpty
-	@Size(min = 8)
+	//@Size(min = 8)
 	@Column(name = "ds_senha")
 	private String senha;
 	

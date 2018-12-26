@@ -163,11 +163,14 @@ public class UsuarioService {
 	}
 
 	public void updateUser(Usuario user, String loginOld) {
-		int qtd = usuarioDao.updateUser(user);
-		if(qtd == 0){
+		try {
+			user.setSenha(user.getSenha());
+			repository.update(user);
+		} catch (Exception e) {
+			e.printStackTrace();
 			throw new UserNotFoundException(ExceptionMessages.USER_NOT_EXISTS);
 		}
-		usuarioDao.logout(loginOld);
+		//usuarioDao.logout(loginOld);
 		//updateEmailUserGlpi(user.getIdUsuarioGlpi(), user.getLogin());
 	}
 

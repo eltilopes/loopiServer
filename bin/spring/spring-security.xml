@@ -38,6 +38,7 @@
         <security:intercept-url pattern="/grupo/listar" access="permitAll"/>
         <security:intercept-url pattern="/mobile/version" access="permitAll"/>
         
+        <security:intercept-url pattern="/usuario/resgatar/senha" access="hasRole('usuario_update')"/>
         <security:intercept-url pattern="/usuario/editar" access="hasRole('usuario_update')"/>
         <security:intercept-url pattern="/usuario/roles/**" access="hasRole('usuario_read')"/>
         <security:intercept-url pattern="/usuario/apikey" access="hasRole('usuario_apikey')"/>
