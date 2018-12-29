@@ -17,8 +17,10 @@ public class ExceptionMessages {
 	public static final String CPF_USED = "O CPF informado j� est� sendo utilizado por um outro usu�rio";
 	
 	public static final String INTERNAL_SERVER_ERROR = "Ocorreu um erro interno no servidor";
-	
+
 	public static final String ID_REQUIRED = "O ID do usu�rio n�o pode ser nulo";
+	
+	public static final String CODIGO_NAO_CONFERE = "Codigo nao confere";
 	
 	public static final String WRONG_MAIL = "N�o foi poss�vel enviar um email de confirma��o para o endere�o de email informado";
 

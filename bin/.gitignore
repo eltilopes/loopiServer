@@ -1,9 +1,9 @@
 /ValidationMessages.properties
-/br/
 /encache.xml
 /log4j.properties
 /messages.properties
 /mybatis/
+/br/
 /spring/
 /sql/
 /tables.sql

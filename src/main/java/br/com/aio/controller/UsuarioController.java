@@ -25,6 +25,7 @@ import br.com.aio.exception.CpfAlreadyExistsException;
 import br.com.aio.exception.UserAlreadyExistsException;
 import br.com.aio.exception.UserNotFoundException;
 import br.com.aio.model.entity.ApiKey;
+import br.com.aio.model.entity.vo.AlterarSenhaVo;
 import br.com.aio.model.service.ApiKeyService;
 import br.com.aio.model.service.UsuarioService;
 import br.com.aio.security.entity.Role;
@@ -83,15 +84,42 @@ public class UsuarioController {
 		return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value = "/resgatar/senha", method = POST)
-	public ResponseEntity<String> passwordRecover(@RequestParam String senha, @RequestParam String cpf){
-		Usuario user = usuarioService.getUserByCpf(cpf);
-		if(Objects.isNull(user)){
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	@RequestMapping(value = "/alterarSenha", method = POST)
+	public ResponseEntity<Usuario> alterarSenha(@Valid @RequestBody AlterarSenhaVo alterarSenhaVo){
+		
+		Usuario userOld = usuarioService.getUserByKey(alterarSenhaVo.getChave());
+		if(Objects.isNull(userOld)){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		user.setSenha(senha);
-		usuarioService.preUpdatePassword(user);
-		return new ResponseEntity<String>(user.getLogin(), HttpStatus.ACCEPTED);
+		String codigo = usuarioService.getCodigoByUserHelper(userOld);
+		
+		if(!(codigo.equals(alterarSenhaVo.getChave()))){
+			throw new BusinessException(ExceptionMessages.CODIGO_NAO_CONFERE);
+		}
+		
+		userOld.setSenha(alterarSenhaVo.getSenha());
+		try{
+			usuarioService.updateSenha(userOld);
+		}catch(UserNotFoundException e){
+			throw new BusinessException(e.getMessage());
+		}
+		return new ResponseEntity<Usuario>(userOld, HttpStatus.CREATED);
+	}
+	
+	
+	@RequestMapping(value = "/resgatarSenha", method = POST)
+	public ResponseEntity<Usuario> passwordRecover(@Valid @RequestBody Usuario usuario){
+		Usuario user = usuarioService.getUserByCpf(usuario.getCpf());
+		if(Objects.isNull(user)){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		try{
+			usuarioService.preUpdatePassword(user);
+		}catch(UserNotFoundException e){
+			throw new BusinessException(e.getMessage());
+		}
+		return new ResponseEntity<Usuario>(usuario, HttpStatus.ACCEPTED);
+		
 	}
 	
 	@RequestMapping(value = "/roles", method = GET)

@@ -333,11 +333,15 @@ order by um.ci_usuario_mobile
 		parameterType="String"
 		resultType="br.com.aio.security.entity.Usuario">
 		select
-			  um.ci_usuario_mobile id,
-			  um.ds_email login,
-			  um.fl_ativo ativo
-		from tb_usuario_mobile um 
-		where um.nr_cpf = #{value}
+			  	u.ci_usuario_mobile id,
+				u.ds_nome nome,
+				u.nr_cpf cpf,
+				u.ds_url_imagem urlImagem,
+				u.nr_telefone telefone,
+				u.ds_email login,
+				u.ds_senha senha
+		from tb_usuario_mobile u 
+		where u.nr_cpf = #{value}
 	</select>
 	
 	<select id="getUserByCodigoConvite" 
@@ -355,31 +359,39 @@ order by um.ci_usuario_mobile
 	
 	<select id="getUserByKey" parameterType="String" resultType="br.com.aio.security.entity.Usuario">
 		select
-			  um.ci_usuario_mobile id,
-			  f.nr_cpf cpf,
-			  um.ds_email login,
-			  um.fl_ativo ativo,
-        f.ci_funcionario "funcionario.id"
-		from tb_usuario_mobile um 
-	    inner join rh.tb_funcionario f on f.ci_funcionario = um.cd_funcionario
-	    inner join tb_usuario_mobile_aux uaux on uaux.cd_usuario_mobile = um.ci_usuario_mobile
+			  u.ci_usuario_mobile id,
+				u.ds_nome nome,
+				u.nr_cpf cpf,
+				u.ds_url_imagem urlImagem,
+				u.nr_telefone telefone,
+				u.ds_email login,
+				u.ds_senha senha
+		from tb_usuario_mobile u 
+	    inner join tb_usuario_mobile_aux uaux on uaux.cd_usuario_mobile = u.ci_usuario_mobile
 	    where uaux.ds_chave = #{value}
 	    	  and uaux.fl_ativo = 1
-	       	  and TO_DATE(sysdate, 'yyyy/mm/dd') between TO_DATE(uaux.dt_cadastro, 'yyyy/mm/dd') and TO_DATE((uaux.dt_cadastro+3), 'yyyy/mm/dd')
+	       	  and TO_CHAR(now(), 'yyyy/mm/dd') between TO_CHAR(uaux.dt_cadastro, 'yyyy/mm/dd') and TO_CHAR((uaux.dt_cadastro+3), 'yyyy/mm/dd')
+	</select>
+	
+	<select id="getCodigoByUserHelper" parameterType="Long" resultType="String">
+		select uaux.ds_chave from tb_usuario_mobile_aux uaux
+			where uaux.cd_usuario_mobile = #{value}
+				and uaux.fl_ativo = 1
+	        	and TO_CHAR(now(), 'yyyy/mm/dd') between TO_CHAR(uaux.dt_cadastro, 'yyyy/mm/dd') and TO_CHAR((uaux.dt_cadastro+3), 'yyyy/mm/dd')
 	</select>
 	
 	<select id="getValuesByUserHelper" parameterType="Long" resultType="Map">
 		select uaux.ds_email, uaux.ds_senha from tb_usuario_mobile_aux uaux
 			where uaux.cd_usuario_mobile = #{value}
 				and uaux.fl_ativo = 1
-	        	and TO_DATE(sysdate, 'yyyy/mm/dd') between TO_DATE(uaux.dt_cadastro, 'yyyy/mm/dd') and TO_DATE((uaux.dt_cadastro+3), 'yyyy/mm/dd')
+	        	and TO_CHAR(now(), 'yyyy/mm/dd') between TO_CHAR(uaux.dt_cadastro, 'yyyy/mm/dd') and TO_CHAR((uaux.dt_cadastro+3), 'yyyy/mm/dd')
 	</select>
 	
 	<update id="setInvalidUserHelper"  parameterType="Long">
 		update  tb_usuario_mobile_aux aux
 			set aux.fl_ativo = 0
 			where aux.fl_ativo = 1
-	        and TO_DATE(sysdate, 'yyyy/mm/dd') between TO_DATE(aux.dt_cadastro, 'yyyy/mm/dd') and TO_DATE((aux.dt_cadastro+3), 'yyyy/mm/dd')
+			and TO_CHAR(now(), 'yyyy/mm/dd') between TO_CHAR(aux.dt_cadastro, 'yyyy/mm/dd') and TO_CHAR((aux.dt_cadastro+3), 'yyyy/mm/dd')
 			and aux.cd_usuario_mobile = #{value}
 	</update>
 	

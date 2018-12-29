@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -24,7 +24,7 @@ public class UsuarioDao {
 	private SqlSession sqlSession;
 	
 	public String preUpdate(Usuario user){
-		String uuid = UUID.randomUUID().toString();
+		String uuid = gerarChave();
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("login", user.getLogin());
 		parameters.put("senha", user.getSenha());
@@ -37,6 +37,28 @@ public class UsuarioDao {
 		}
 		return uuid;
 	}
+	private String gerarChave() {
+
+		String chave = "";
+		// Determia as letras que poderão estar presente nas chaves
+		String letras = "ABCDEFGHIJKLMNOPQRSTUVYWXZ";
+		String numeros = "0123456789";
+
+		Random random = new Random();
+		int indexLetras = -1;
+		int indexNumeros = -1;
+		for( int i = 0; i < 3; i++ ) {
+			   indexLetras = random.nextInt( letras.length() );
+			   chave += letras.substring( indexLetras, indexLetras + 1 ) ;
+		}
+		for( int i = 0; i < 3; i++ ) {
+			   indexNumeros = random.nextInt( numeros.length() );
+			   chave +=  numeros.substring( indexNumeros, indexNumeros + 1 ) ;
+		}
+		System.out.println(chave);
+		return chave;
+	}
+	
 	public void updateLenghtUser(Usuario user) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("update_lenght", user.getUpdateLenght() + 1);
@@ -102,7 +124,11 @@ public class UsuarioDao {
 	public Map<String, String> getValuesByUserHelper(Usuario user) {
 		return sqlSession.selectOne("getValuesByUserHelper", user.getId());
 	}
-
+	
+	public String getCodigoByUserHelper(Usuario user) {
+		return sqlSession.selectOne("getCodigoByUserHelper", user.getId());
+	}
+	
 	public void setInvalidUserHelper(Usuario user) {
 		sqlSession.update("setInvalidUserHelper", user.getId());
 	}

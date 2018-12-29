@@ -173,6 +173,18 @@ public class UsuarioService {
 		//usuarioDao.logout(loginOld);
 		//updateEmailUserGlpi(user.getIdUsuarioGlpi(), user.getLogin());
 	}
+	
+	public void updateSenha(Usuario user) {
+		try {
+			//user.setSenha(user.getSenha());
+			repository.update(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new UserNotFoundException(ExceptionMessages.USER_NOT_EXISTS);
+		}
+		usuarioDao.logout(user.getLogin());
+		//updateEmailUserGlpi(user.getIdUsuarioGlpi(), user.getLogin());
+	}
 
 //	private void updateEmailUserGlpi(Integer idGlpi, String loginNew) {
 //		if(Objects.isNull(idGlpi)){
@@ -239,7 +251,11 @@ public class UsuarioService {
 	public Usuario getUserByKey(String key) {
 		return usuarioDao.getUserByKey(key);
 	}
-
+	
+	public String getCodigoByUserHelper(Usuario usuario) {
+		return usuarioDao.getCodigoByUserHelper(usuario);
+	}
+	
 	public RoleService getRoleService() {
 		return roleService;
 	}
